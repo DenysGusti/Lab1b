@@ -1,0 +1,66 @@
+html, body {
+    margin: 0;
+    padding: 25px;
+    background-color: #2a2a2a;
+    color: white;
+    font-family: Arial, sans-serif;
+    display: flex;
+    gap: 20px;
+}
+
+#glCanvas {
+    width: 750px;
+    height: 750px;
+    /* offensive canvas background color to test opacity/clearing bugs */
+    background-color: #da6052;
+}
+
+#instructions {
+    max-width: 400px;
+    background: rgba(0, 0, 0, 0.8);
+    padding: 15px;
+    border-radius: 10px;
+    font-size: 14px;
+}
+
+h2 {
+    margin-top: 0;
+    color: #FFD700;
+}
+
+ul {
+    padding-left: 20px;
+}
+
+#fileUploadContainer {
+    color: white;
+    font-family: Arial, sans-serif;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+#fileUploadContainer p {
+    margin-bottom: 10px;
+    font-size: 16px;
+}
+
+/* Hide the default file input */
+#objFileInput {
+    display: none;
+}
+
+/* Style the custom file upload button */
+#customFileButton {
+    background-color: #444;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    display: inline-block;
+    border: 1px solid #666;
+    transition: background-color 0.3s ease;
+}
+
+#customFileButton:hover {
+    background-color: #555;
+}
