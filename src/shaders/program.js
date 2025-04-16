@@ -1,6 +1,9 @@
 import * as glm from '../gl-matrix';
+import {printMat3} from "../utils.js";
 import {baseVertexShaderSourceCode} from "./base/vertex.js";
 import {baseFragmentShaderSourceCode} from "./base/fragment.js";
+import {gourandVertexShaderSourceCode} from "./gourand/vertex.js";
+import {gourandFragmentShaderSourceCode} from "./gourand/fragment.js";
 
 export class Program {
     gl;
@@ -23,9 +26,13 @@ export class Program {
 
     normalUniform;
 
+    coefficientAmbientUniform;
+    coefficientDiffuseUniform;
+    coefficientSpecularUniform;
+    coefficientShininessUniform;
+
     constructor(gl) {
         this.gl = gl;
-
         this.createProgram();
     }
 
@@ -43,8 +50,11 @@ export class Program {
     }
 
     createProgram() {
-        const vertexShader = this.createShader(this.gl.VERTEX_SHADER, baseVertexShaderSourceCode);
-        const fragmentShader = this.createShader(this.gl.FRAGMENT_SHADER, baseFragmentShaderSourceCode);
+        // const vertexShader = this.createShader(this.gl.VERTEX_SHADER, baseVertexShaderSourceCode);
+        // const fragmentShader = this.createShader(this.gl.FRAGMENT_SHADER, baseFragmentShaderSourceCode);
+        const vertexShader = this.createShader(this.gl.VERTEX_SHADER, gourandVertexShaderSourceCode);
+        const fragmentShader = this.createShader(this.gl.FRAGMENT_SHADER, gourandFragmentShaderSourceCode);
+
         this.program = this.gl.createProgram();
 
         this.gl.attachShader(this.program, vertexShader);
@@ -72,11 +82,16 @@ export class Program {
 
             this.normalUniform = this.gl.getUniformLocation(this.program, 'normal');
 
+            this.coefficientAmbientUniform = this.gl.getUniformLocation(this.program, 'coefficient.ambient');
+            this.coefficientDiffuseUniform = this.gl.getUniformLocation(this.program, 'coefficient.diffuse');
+            this.coefficientSpecularUniform = this.gl.getUniformLocation(this.program, 'coefficient.specular');
+            this.coefficientShininessUniform = this.gl.getUniformLocation(this.program, 'coefficient.shininess');
+
             this.gl.useProgram(this.program);
         }
     }
 
-    setUniforms(camera, light, global) {
+    setUniforms(camera, light, global, coefficient) {
         this.gl.uniform3fv(this.cameraPositionUniform, camera.eye);
         this.gl.uniformMatrix4fv(this.cameraProjectionUniform, false, camera.projectionMatrix);
         this.gl.uniformMatrix4fv(this.cameraViewUniform, false, camera.getViewMatrix());
@@ -86,6 +101,11 @@ export class Program {
         this.gl.uniformMatrix4fv(this.lightViewUniform, false, light.getViewMatrix());
 
         this.gl.uniformMatrix4fv(this.globalTransformationUniform, false, global.getTransformationMatrix());
+
+        this.gl.uniform3fv(this.coefficientAmbientUniform, coefficient.ambient);
+        this.gl.uniform3fv(this.coefficientDiffuseUniform, coefficient.diffuse);
+        this.gl.uniform3fv(this.coefficientSpecularUniform, coefficient.specular);
+        this.gl.uniform1f(this.coefficientShininessUniform, coefficient.shininess);
     }
 
     setModelUniforms(model, camera, global) {

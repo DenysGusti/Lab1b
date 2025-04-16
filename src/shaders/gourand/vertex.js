@@ -1,4 +1,4 @@
-export const baseVertexShaderSourceCode = `#version 300 es
+export const gourandVertexShaderSourceCode = `#version 300 es
 precision mediump float;
 
 in vec3 vertexPosition;
@@ -38,6 +38,14 @@ uniform Coefficient coefficient;
 void main() {
     vec4 viewPosition = camera.view * global.transformation * model.transformation * vec4(vertexPosition, 1.0);
     gl_Position = camera.projection * viewPosition;
+    
+    vec3 lightVector = normalize(light.position - viewPosition.xyz);
+    vec3 normalVector = normalize(normal * vertexNormal);
+    
+    vec3 ambientColor = vertexColor.rgb * coefficient.ambient;
+    
+    float diffuseIntensity = max(dot(normalVector, lightVector), 0.);
+    vec3 diffuseColor = vertexColor.rgb * diffuseIntensity * coefficient.diffuse;
 
-    fragmentColor = vertexColor.rgb;      
+    fragmentColor = ambientColor + diffuseColor;      
 }`;

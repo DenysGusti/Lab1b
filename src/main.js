@@ -4,18 +4,7 @@ import {ShapeManager} from "./shape_manager.js";
 import {InputHandler} from "./input_handler.js";
 import {TransformationObject} from "./objects/transformation_object.js";
 import {Viewer} from "./objects/viewer.js";
-
-function printMat4(m) {
-    for (let i = 0; i < 4; i++) {
-        const row = [
-            m[i],       // column 0
-            m[i + 4],   // column 1
-            m[i + 8],   // column 2
-            m[i + 12]   // column 3
-        ];
-        console.log(row.map(n => n.toFixed(2)).join('\t'));
-    }
-}
+import {Coefficient} from "./coefficient.js";
 
 async function main() {
     const canvas = document.getElementById("glCanvas");
@@ -39,6 +28,7 @@ async function main() {
     const camera = new Viewer([0, 0, 10], [0, 0, -1], 45, canvas.width / canvas.height);
     const pointLightSource = new Viewer([0, 10, 0], [0, 1, 0], 45, 1.);
     const global = new TransformationObject();
+    const coefficient = new Coefficient([0.1, 0.1, 0.1], [1, 1, 1], [1, 1, 1], 120);
 
     const program = new Program(gl);
     const shapeManager = new ShapeManager(gl, program);
@@ -76,7 +66,7 @@ async function main() {
 
     const drawFrame = () => {
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-        program.setUniforms(camera, pointLightSource, global);
+        program.setUniforms(camera, pointLightSource, global, coefficient);
 
         for (const shape of shapes) {
             program.setModelUniforms(shape, camera, global);
