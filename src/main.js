@@ -1,9 +1,9 @@
 import {Program} from "./shaders/program.js";
 import {ShapeManager} from "./shape_manager.js";
-import {Camera} from "./camera.js";
 import {InputHandler} from "./input_handler.js";
-import {TransformationObject} from "./transformation_object.js";
+import {TransformationObject} from "./objects/transformation_object.js";
 import * as glm from './gl-matrix/index.js';
+import {Viewer} from "./objects/viewer.js";
 
 function printMat4(m) {
     for (let i = 0; i < 4; i++) {
@@ -25,7 +25,8 @@ async function main() {
         return;
     }
 
-    const camera = new Camera(10);
+    const camera = new Viewer([0, 0, 10], [0, 0, -1]);
+    const pointLightSource = new Viewer([0, 10, 0], [0, 1, 0]);
     const globalTransform = new TransformationObject();
 
     const program = new Program(gl);

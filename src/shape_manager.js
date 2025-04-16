@@ -10,7 +10,7 @@ import {
     COORDINATE_SYSTEM_VERTICES,
     createInterleavedCoordinateSystem
 } from "./geometry/coordinate_system.js";
-import {Shape} from "./shape.js";
+import {Shape} from "./objects/shape.js";
 import {OBJParser} from "./obj_parser.js";
 
 export class ShapeManager {

@@ -1,5 +1,5 @@
-import {vertexShaderSourceCode} from "./vertex.js";
-import {fragmentShaderSourceCode} from "./fragment.js";
+import {baseVertexShaderSourceCode} from "./base/vertex.js";
+import {baseFragmentShaderSourceCode} from "./base/fragment.js";
 
 export class Program {
     gl;
@@ -32,8 +32,8 @@ export class Program {
     }
 
     createProgram() {
-        const vertexShader = this.createShader(this.gl.VERTEX_SHADER, vertexShaderSourceCode);
-        const fragmentShader = this.createShader(this.gl.FRAGMENT_SHADER, fragmentShaderSourceCode);
+        const vertexShader = this.createShader(this.gl.VERTEX_SHADER, baseVertexShaderSourceCode);
+        const fragmentShader = this.createShader(this.gl.FRAGMENT_SHADER, baseFragmentShaderSourceCode);
         this.program = this.gl.createProgram();
 
         this.gl.attachShader(this.program, vertexShader);

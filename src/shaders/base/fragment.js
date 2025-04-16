@@ -1,4 +1,4 @@
-export const fragmentShaderSourceCode = `#version 300 es
+export const baseFragmentShaderSourceCode = `#version 300 es
 precision mediump float;
 
 in vec3 fragmentColor;

@@ -1,4 +1,4 @@
-export const vertexShaderSourceCode = `#version 300 es
+export const baseVertexShaderSourceCode = `#version 300 es
 precision mediump float;
 
 in vec3 vertexPosition;
