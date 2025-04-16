@@ -1,8 +1,8 @@
+import * as glm from './gl-matrix';
 import {Program} from "./shaders/program.js";
 import {ShapeManager} from "./shape_manager.js";
 import {InputHandler} from "./input_handler.js";
 import {TransformationObject} from "./objects/transformation_object.js";
-import * as glm from './gl-matrix/index.js';
 import {Viewer} from "./objects/viewer.js";
 
 function printMat4(m) {
@@ -79,7 +79,8 @@ async function main() {
         program.setUniforms(camera, pointLightSource, global);
 
         for (const shape of shapes) {
-            shape.draw(gl, program);
+            program.setModelUniforms(shape, camera, global);
+            shape.draw(gl);
         }
         window.requestAnimationFrame(drawFrame);
     };

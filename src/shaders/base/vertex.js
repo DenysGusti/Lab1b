@@ -22,9 +22,8 @@ uniform Viewer light;
 
 uniform TransformationObject global;
 uniform TransformationObject model;
-
-uniform mat4 viewProjectionMatrix;
-uniform mat4 modelMatrix;
+// it's easier to compute it in js
+uniform mat3 normal;    // inverseTranspose(mat3(camera.view * global.transformation * model.transformation))
 
 void main() {
     fragmentColor = vertexColor;

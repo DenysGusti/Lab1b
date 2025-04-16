@@ -1,4 +1,4 @@
-import * as glm from './gl-matrix/index.js';
+import * as glm from './gl-matrix';
 
 export class InputHandler {
     shapeManager;

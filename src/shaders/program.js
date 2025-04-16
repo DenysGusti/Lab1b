@@ -1,3 +1,4 @@
+import * as glm from '../gl-matrix';
 import {baseVertexShaderSourceCode} from "./base/vertex.js";
 import {baseFragmentShaderSourceCode} from "./base/fragment.js";
 
@@ -19,6 +20,8 @@ export class Program {
 
     globalTransformationUniform;
     modelTransformationUniform;
+
+    normalUniform;
 
     constructor(gl) {
         this.gl = gl;
@@ -67,6 +70,8 @@ export class Program {
             this.globalTransformationUniform = this.gl.getUniformLocation(this.program, 'global.transformation');
             this.modelTransformationUniform = this.gl.getUniformLocation(this.program, 'model.transformation');
 
+            this.normalUniform = this.gl.getUniformLocation(this.program, 'normal');
+
             this.gl.useProgram(this.program);
         }
     }
@@ -81,5 +86,21 @@ export class Program {
         this.gl.uniformMatrix4fv(this.lightViewUniform, false, light.getViewMatrix());
 
         this.gl.uniformMatrix4fv(this.globalTransformationUniform, false, global.getTransformationMatrix());
+    }
+
+    setModelUniforms(model, camera, global) {
+        const modelTransformation = model.getTransformationMatrix();
+        this.gl.uniformMatrix4fv(this.modelTransformationUniform, false, modelTransformation);
+
+        const cameraViewGlobalTransformationModelTransformation = glm.mat4.create();
+        glm.mat4.multiply(cameraViewGlobalTransformationModelTransformation,
+            global.getTransformationMatrix(), model.getTransformationMatrix());
+        glm.mat4.multiply(cameraViewGlobalTransformationModelTransformation,
+            camera.getViewMatrix(), cameraViewGlobalTransformationModelTransformation);
+
+        // inverseTranspose(mat3(camera.view * global.transformation * model.transformation))
+        const normalMatrix = glm.mat3.create();
+        glm.mat3.normalFromMat4(normalMatrix, cameraViewGlobalTransformationModelTransformation);
+        this.gl.uniformMatrix3fv(this.normalUniform, false, normalMatrix);
     }
 }
