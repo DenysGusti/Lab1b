@@ -4,16 +4,16 @@ export class InputHandler {
     shapeManager;
     shapes;
     camera;
-    globalTransform;
+    global;
 
     selectedIndex = -1;
     cameraMode = true;
 
-    constructor(shapeManager, shapes, camera, globalTransform) {
+    constructor(shapeManager, shapes, camera, global) {
         this.shapeManager = shapeManager;
         this.shapes = shapes;
         this.camera = camera;
-        this.globalTransform = globalTransform;
+        this.global = global;
 
         this.initKeyboardControls();
         this.initMouseControls();
@@ -124,7 +124,7 @@ export class InputHandler {
         const step = 0.1;
         const angle = glm.glMatrix.toRadian(5);
 
-        const selectedObject = this.selectedIndex >= 0 ? this.shapes[this.selectedIndex] : this.globalTransform;
+        const selectedObject = this.selectedIndex >= 0 ? this.shapes[this.selectedIndex] : this.global;
 
         switch (event.key) {
             case "a":

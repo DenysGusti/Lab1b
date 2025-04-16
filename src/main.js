@@ -25,9 +25,20 @@ async function main() {
         return;
     }
 
-    const camera = new Viewer([0, 0, 10], [0, 0, -1]);
-    const pointLightSource = new Viewer([0, 10, 0], [0, 1, 0]);
-    const globalTransform = new TransformationObject();
+    canvas.width = canvas.clientWidth * devicePixelRatio;
+    canvas.height = canvas.clientHeight * devicePixelRatio;
+    gl.viewport(0, 0, canvas.width, canvas.height);
+
+    gl.clearColor(0.08, 0.08, 0.08, 1);
+    gl.enable(gl.DEPTH_TEST);
+    gl.depthFunc(gl.LEQUAL);
+    gl.enable(gl.CULL_FACE);
+    gl.cullFace(gl.BACK);
+    gl.frontFace(gl.CCW);
+
+    const camera = new Viewer([0, 0, 10], [0, 0, -1], 45, canvas.width / canvas.height);
+    const pointLightSource = new Viewer([0, 10, 0], [0, 1, 0], 45, 1.);
+    const global = new TransformationObject();
 
     const program = new Program(gl);
     const shapeManager = new ShapeManager(gl, program);
@@ -58,31 +69,15 @@ async function main() {
         shapeManager.createCube([SPACING, -SPACING, 0]),
     ];
 
-    new InputHandler(shapeManager, shapes, camera, globalTransform);
-
-    canvas.width = canvas.clientWidth * devicePixelRatio;
-    canvas.height = canvas.clientHeight * devicePixelRatio;
-    gl.viewport(0, 0, canvas.width, canvas.height);
+    new InputHandler(shapeManager, shapes, camera, global);
 
     const projectionMatrix = glm.mat4.create();
     glm.mat4.perspective(projectionMatrix, glm.glMatrix.toRadian(45), canvas.width / canvas.height, 0.1, 100.0);
 
-    gl.clearColor(0.08, 0.08, 0.08, 1);
-    gl.enable(gl.DEPTH_TEST);
-    gl.depthFunc(gl.LEQUAL);
-    gl.enable(gl.CULL_FACE);
-    gl.cullFace(gl.BACK);
-    gl.frontFace(gl.CCW);
-
-    const viewProjectionMatrix = glm.mat4.create();
-
     const drawFrame = () => {
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+        program.setUniforms(camera, pointLightSource, global);
 
-        glm.mat4.multiply(viewProjectionMatrix, camera.getViewMatrix(), globalTransform.getTransformationMatrix());
-        glm.mat4.multiply(viewProjectionMatrix, projectionMatrix, viewProjectionMatrix);
-        // vertex shader gets already multiplied matrix: projectionMatrix * viewMatrix * globalTransformationMatrix
-        program.setViewProjectionMatrix(viewProjectionMatrix);
         for (const shape of shapes) {
             shape.draw(gl, program);
         }

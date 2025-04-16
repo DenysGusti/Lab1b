@@ -1,3 +1,4 @@
+import * as glm from '../gl-matrix';
 import {TransformationObject} from "./transformation_object.js";
 
 export class Shape extends TransformationObject {
@@ -19,8 +20,10 @@ export class Shape extends TransformationObject {
 
     draw(gl, program) {
         const modelMatrix = super.getTransformationMatrix();
+        // const normalMatrix = glm.mat3.create();
+        // glm.mat3.normalFromMat4(normalMatrix, modelViewMatrix);
 
-        gl.uniformMatrix4fv(program.modelMatrixUniform, false, modelMatrix);
+        gl.uniformMatrix4fv(program.modelTransformationUniform, false, modelMatrix);
 
         gl.bindVertexArray(this.vao);
         gl.drawElements(gl.TRIANGLES, this.numIndices, gl.UNSIGNED_SHORT, 0);

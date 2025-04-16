@@ -9,8 +9,16 @@ export class Program {
     colorAttrib;
     normalAttrib;
 
-    modelMatrixUniform;
-    viewProjectionMatrixUniform;
+    cameraPositionUniform;
+    cameraProjectionUniform;
+    cameraViewUniform;
+
+    lightPositionUniform;
+    lightProjectionUniform;
+    lightViewUniform;
+
+    globalTransformationUniform;
+    modelTransformationUniform;
 
     constructor(gl) {
         this.gl = gl;
@@ -48,14 +56,30 @@ export class Program {
             this.colorAttrib = this.gl.getAttribLocation(this.program, 'vertexColor');
             this.normalAttrib = this.gl.getAttribLocation(this.program, 'vertexNormal');
 
-            this.modelMatrixUniform = this.gl.getUniformLocation(this.program, 'modelMatrix');
-            this.viewProjectionMatrixUniform = this.gl.getUniformLocation(this.program, 'viewProjectionMatrix');
+            this.cameraPositionUniform = this.gl.getUniformLocation(this.program, 'camera.position');
+            this.cameraProjectionUniform = this.gl.getUniformLocation(this.program, 'camera.projection');
+            this.cameraViewUniform = this.gl.getUniformLocation(this.program, 'camera.view');
+
+            this.lightPositionUniform = this.gl.getUniformLocation(this.program, 'light.position');
+            this.lightProjectionUniform = this.gl.getUniformLocation(this.program, 'light.projection');
+            this.lightViewUniform = this.gl.getUniformLocation(this.program, 'light.view');
+
+            this.globalTransformationUniform = this.gl.getUniformLocation(this.program, 'global.transformation');
+            this.modelTransformationUniform = this.gl.getUniformLocation(this.program, 'model.transformation');
 
             this.gl.useProgram(this.program);
         }
     }
 
-    setViewProjectionMatrix(viewProjectionMatrix) {
-        this.gl.uniformMatrix4fv(this.viewProjectionMatrixUniform, false, viewProjectionMatrix);
+    setUniforms(camera, light, global) {
+        this.gl.uniform3fv(this.cameraPositionUniform, camera.eye);
+        this.gl.uniformMatrix4fv(this.cameraProjectionUniform, false, camera.projectionMatrix);
+        this.gl.uniformMatrix4fv(this.cameraViewUniform, false, camera.getViewMatrix());
+
+        this.gl.uniform3fv(this.lightPositionUniform, light.eye);
+        this.gl.uniformMatrix4fv(this.lightProjectionUniform, false, light.projectionMatrix);
+        this.gl.uniformMatrix4fv(this.lightViewUniform, false, light.getViewMatrix());
+
+        this.gl.uniformMatrix4fv(this.globalTransformationUniform, false, global.getTransformationMatrix());
     }
 }

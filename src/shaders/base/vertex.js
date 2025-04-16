@@ -7,11 +7,27 @@ in vec3 vertexNormal;
 
 out vec3 fragmentColor;
 
+struct Viewer {
+    vec3 position;
+    mat4 projection;
+    mat4 view;
+};
+
+struct TransformationObject {
+    mat4 transformation;
+};
+
+uniform Viewer camera;
+uniform Viewer light;
+
+uniform TransformationObject global;
+uniform TransformationObject model;
+
 uniform mat4 viewProjectionMatrix;
 uniform mat4 modelMatrix;
 
 void main() {
-  fragmentColor = vertexColor;
+    fragmentColor = vertexColor;
 
-  gl_Position = viewProjectionMatrix * modelMatrix * vec4(vertexPosition, 1.0);
+    gl_Position = camera.projection * camera.view * global.transformation * model.transformation * vec4(vertexPosition, 1.0);
 }`;
