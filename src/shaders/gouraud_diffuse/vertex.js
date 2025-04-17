@@ -1,4 +1,4 @@
-export const gourandVertexShaderSourceCode = `#version 300 es
+export const gouraudDiffuseVertexShaderSourceCode = `#version 300 es
 precision mediump float;
 
 in vec3 vertexPosition;

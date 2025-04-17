@@ -7,9 +7,8 @@ import {Coefficient} from "./coefficient.js";
 import {GlobalCoordinateSystem} from "./objects/global_coordinate_system.js";
 import {baseVertexShaderSourceCode} from "./shaders/base/vertex.js";
 import {baseFragmentShaderSourceCode} from "./shaders/base/fragment.js";
-import {gourandVertexShaderSourceCode} from "./shaders/gourand/vertex.js";
-import {gourandFragmentShaderSourceCode} from "./shaders/gourand/fragment.js";
-import {printMat4} from "./utils.js";
+import {gouraudDiffuseVertexShaderSourceCode} from "./shaders/gouraud_diffuse/vertex.js";
+import {gouraudDiffuseFragmentShaderSourceCode} from "./shaders/gouraud_diffuse/fragment.js";
 
 async function main() {
     const canvas = document.getElementById("glCanvas");
@@ -32,13 +31,12 @@ async function main() {
 
     const programs = {
         "base": new Program(gl, baseVertexShaderSourceCode, baseFragmentShaderSourceCode),
-        "gourand": new Program(gl, gourandVertexShaderSourceCode, gourandFragmentShaderSourceCode),
-
+        "gouraudDiffuse": new Program(gl, gouraudDiffuseVertexShaderSourceCode, gouraudDiffuseFragmentShaderSourceCode),
     };
 
     // attributes are shares across programs, uniforms not
-    // I think that base optimizes out normals, everything is dark, so gourand
-    const shapeManager = new ShapeManager(gl, programs["gourand"].activate());
+    // I think that base optimizes out normals, everything is dark, so gouraudDiffuse
+    const shapeManager = new ShapeManager(gl, programs["gouraudDiffuse"].activate());
 
     await shapeManager.addOBJFromFile("bunny", "sampleModels/bunny.obj");
     await shapeManager.addOBJFromFile("cube", "sampleModels/cube.obj");
@@ -79,7 +77,7 @@ async function main() {
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
         programs["base"].activate().setUniformStructs(...uniformStructs);
-        programs["gourand"].activate().setUniformStructs(...uniformStructs);
+        programs["gouraudDiffuse"].activate().setUniformStructs(...uniformStructs);
 
         // draw global coordinate axes without lighting
         programs["base"].activate().setUniformTransformation(global.getTransformationMatrix(), camera);
@@ -98,7 +96,7 @@ async function main() {
             shape.selectableObject.drawCoordinateSystem();
 
             // draw shape with lighting
-            programs["gourand"].activate().setUniformTransformation(transformation, camera);
+            programs["gouraudDiffuse"].activate().setUniformTransformation(transformation, camera);
             shape.vao.draw();
         }
         window.requestAnimationFrame(drawFrame);

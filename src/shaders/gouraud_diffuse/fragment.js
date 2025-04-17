@@ -1,4 +1,4 @@
-export const gourandFragmentShaderSourceCode = `#version 300 es
+export const gouraudDiffuseFragmentShaderSourceCode = `#version 300 es
 precision mediump float;
 
 in vec3 fragmentColor;
