@@ -27,7 +27,7 @@ export class InputHandler {
         this.camera = camera;
         this.light = light;
 
-        this.currentProgram = this.programs["gouraudDiffuse"];
+        this.currentProgram = this.programs["base"];
 
         this.initKeyboardControls();
         this.initMouseControls();
@@ -237,13 +237,28 @@ export class InputHandler {
     handleIllumination(event) {
         switch (event.key) {
             case "w":
-                this.currentProgram = this.programs["gouraudDiffuse"];
+                if (this.currentProgram === this.programs["gouraudDiffuse"])
+                    this.currentProgram = this.programs["base"];
+                else
+                    this.currentProgram = this.programs["gouraudDiffuse"];
                 break;
             case "e":
-                this.currentProgram = this.programs["gouraudSpecular"];
+                if (this.currentProgram === this.programs["gouraudSpecular"])
+                    this.currentProgram = this.programs["base"];
+                else
+                    this.currentProgram = this.programs["gouraudSpecular"];
                 break;
             case "r":
-                this.currentProgram = this.programs["phongDiffuse"];
+                if (this.currentProgram === this.programs["phongDiffuse"])
+                    this.currentProgram = this.programs["base"];
+                else
+                    this.currentProgram = this.programs["phongDiffuse"];
+                break;
+            case "t":
+                if (this.currentProgram === this.programs["phongSpecular"])
+                    this.currentProgram = this.programs["base"];
+                else
+                    this.currentProgram = this.programs["phongSpecular"];
                 break;
         }
     }
