@@ -32,5 +32,6 @@ uniform mat3 normal;    // it's better to compute it in js
 
 void main() {
     fragmentColor = vertexColor;
+
     gl_Position = camera.projection * camera.view * transformation * vec4(vertexPosition, 1.0);
 }`;

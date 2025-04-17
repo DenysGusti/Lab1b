@@ -45,14 +45,17 @@ void main() {
     vec3 diffuseColor = vertexColor * diffuseIntensity * coefficient.diffuse;
 
     float specularIntensity = 0.;
+
     if (diffuseIntensity > 0.) {
         vec3 eyeVector = normalize(-viewPosition.xyz);
         vec3 reflectionVector = reflect(-lightVector, normalVector);    // 2. * dot(n, l) * n - l;
 
         specularIntensity = pow(max(dot(reflectionVector, eyeVector), 0.), coefficient.shininess);
     }
+
     vec3 specularColor = specularIntensity * coefficient.specular;
 
-    fragmentColor = ambientColor + diffuseColor + specularColor;      
+    fragmentColor = ambientColor + diffuseColor + specularColor;
+
     gl_Position = camera.projection * viewPosition;
 }`;

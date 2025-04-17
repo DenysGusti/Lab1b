@@ -13,6 +13,9 @@ import {gouraudDiffuseVertexShaderSourceCode} from "./shaders/gouraud/vertex_dif
 import {gouraudSpecularVertexShaderSourceCode} from "./shaders/gouraud/vertex_specular.js";
 import {gouraudFragmentShaderSourceCode} from "./shaders/gouraud/fragment.js";
 
+import {phongVertexShaderSourceCode} from "./shaders/phong/vertex.js";
+import {phongDiffuseFragmentShaderSourceCode} from "./shaders/phong/fragment_diffuse.js";
+
 async function main() {
     const canvas = document.getElementById("glCanvas");
     const gl = canvas.getContext("webgl2");
@@ -36,6 +39,7 @@ async function main() {
         "base": new Program(gl, baseVertexShaderSourceCode, baseFragmentShaderSourceCode),
         "gouraudDiffuse": new Program(gl, gouraudDiffuseVertexShaderSourceCode, gouraudFragmentShaderSourceCode),
         "gouraudSpecular": new Program(gl, gouraudSpecularVertexShaderSourceCode, gouraudFragmentShaderSourceCode),
+        "phongDiffuse": new Program(gl, phongVertexShaderSourceCode, phongDiffuseFragmentShaderSourceCode)
     };
 
     // attributes are shares across programs, uniforms not

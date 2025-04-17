@@ -242,6 +242,9 @@ export class InputHandler {
             case "e":
                 this.currentProgram = this.programs["gouraudSpecular"];
                 break;
+            case "r":
+                this.currentProgram = this.programs["phongDiffuse"];
+                break;
         }
     }
 
