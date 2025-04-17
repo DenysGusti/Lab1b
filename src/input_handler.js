@@ -9,6 +9,7 @@ export class InputHandler {
     }
 
     shapeManager;
+    programs;
     shapes;
     global;
     camera;
@@ -16,13 +17,17 @@ export class InputHandler {
 
     currentMode = InputHandler.modes.camera;
     selectedIndex = -1;
+    currentProgram = null;
 
-    constructor(shapeManager, shapes, global, camera, light) {
+    constructor(shapeManager, programs, shapes, global, camera, light) {
         this.shapeManager = shapeManager;
+        this.programs = programs;
         this.shapes = shapes;
         this.global = global;
         this.camera = camera;
         this.light = light;
+
+        this.currentProgram = this.programs["gouraudDiffuse"];
 
         this.initKeyboardControls();
         this.initMouseControls();
@@ -33,6 +38,7 @@ export class InputHandler {
         document.addEventListener("keydown", (event) => {
             this.handleSelection(event);
             this.handleTransformation(event);
+            this.handleIllumination(event);
         });
     }
 
@@ -225,6 +231,17 @@ export class InputHandler {
                         break;
                 }
             }
+        }
+    }
+
+    handleIllumination(event) {
+        switch (event.key) {
+            case "w":
+                this.currentProgram = this.programs["gouraudDiffuse"];
+                break;
+            case "e":
+                this.currentProgram = this.programs["gouraudSpecular"];
+                break;
         }
     }
 

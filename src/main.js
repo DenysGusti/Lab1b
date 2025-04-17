@@ -5,10 +5,13 @@ import {InputHandler} from "./input_handler.js";
 import {Viewer} from "./objects/viewer.js";
 import {Coefficient} from "./coefficient.js";
 import {GlobalCoordinateSystem} from "./objects/global_coordinate_system.js";
+
 import {baseVertexShaderSourceCode} from "./shaders/base/vertex.js";
 import {baseFragmentShaderSourceCode} from "./shaders/base/fragment.js";
-import {gouraudDiffuseVertexShaderSourceCode} from "./shaders/gouraud_diffuse/vertex.js";
-import {gouraudDiffuseFragmentShaderSourceCode} from "./shaders/gouraud_diffuse/fragment.js";
+
+import {gouraudDiffuseVertexShaderSourceCode} from "./shaders/gouraud/vertex_diffuse.js";
+import {gouraudSpecularVertexShaderSourceCode} from "./shaders/gouraud/vertex_specular.js";
+import {gouraudFragmentShaderSourceCode} from "./shaders/gouraud/fragment.js";
 
 async function main() {
     const canvas = document.getElementById("glCanvas");
@@ -31,12 +34,13 @@ async function main() {
 
     const programs = {
         "base": new Program(gl, baseVertexShaderSourceCode, baseFragmentShaderSourceCode),
-        "gouraudDiffuse": new Program(gl, gouraudDiffuseVertexShaderSourceCode, gouraudDiffuseFragmentShaderSourceCode),
+        "gouraudDiffuse": new Program(gl, gouraudDiffuseVertexShaderSourceCode, gouraudFragmentShaderSourceCode),
+        "gouraudSpecular": new Program(gl, gouraudSpecularVertexShaderSourceCode, gouraudFragmentShaderSourceCode),
     };
 
     // attributes are shares across programs, uniforms not
-    // I think that base optimizes out normals, everything is dark, so gouraudDiffuse
-    const shapeManager = new ShapeManager(gl, programs["gouraudDiffuse"].activate());
+    // I think that base optimizes out normals, everything is dark, so gouraudSpecular
+    const shapeManager = new ShapeManager(gl, programs["gouraudSpecular"].activate());
 
     await shapeManager.addOBJFromFile("bunny", "sampleModels/bunny.obj");
     await shapeManager.addOBJFromFile("cube", "sampleModels/cube.obj");
@@ -65,19 +69,20 @@ async function main() {
     ];
 
     const camera = new Viewer([0, 0, 10], null, [0, 0, -1], 45, canvas.width / canvas.height, shapeManager.createSelectableObject());
-    const light = new Viewer([0, 10, 0], glm.vec3.create(), null, 45, 1., shapeManager.createSelectableObject());
+    const light = new Viewer([0, 10, 10], glm.vec3.create(), null, 45, 1., shapeManager.createSelectableObject());
     const global = new GlobalCoordinateSystem(shapeManager.createSelectableObject());
     const coefficient = new Coefficient([0.2, 0.2, 0.2], [0.8, 0.8, 0.8], [1, 1, 1], 120);
 
     const uniformStructs = [coefficient, camera, light];
 
-    new InputHandler(shapeManager, shapes, global, camera, light);
+    const inputHandler = new InputHandler(shapeManager, programs, shapes, global, camera, light);
 
     const drawFrame = () => {
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-        programs["base"].activate().setUniformStructs(...uniformStructs);
-        programs["gouraudDiffuse"].activate().setUniformStructs(...uniformStructs);
+        for (const [, program] of Object.entries(programs)) {
+            program.activate().setUniformStructs(...uniformStructs);
+        }
 
         // draw global coordinate axes without lighting
         programs["base"].activate().setUniformTransformation(global.getTransformationMatrix(), camera);
@@ -96,7 +101,7 @@ async function main() {
             shape.selectableObject.drawCoordinateSystem();
 
             // draw shape with lighting
-            programs["gouraudDiffuse"].activate().setUniformTransformation(transformation, camera);
+            inputHandler.currentProgram.activate().setUniformTransformation(transformation, camera);
             shape.vao.draw();
         }
         window.requestAnimationFrame(drawFrame);

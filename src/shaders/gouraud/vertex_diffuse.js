@@ -30,6 +30,7 @@ uniform mat4 transformation;
 // inverseTranspose(mat3(camera.view * transformation))
 uniform mat3 normal;    // it's better to compute it in js
 
+// Local Illumination, page 29
 void main() {
     // lighting calculations happen in view space
     vec4 viewPosition = camera.view * transformation * vec4(vertexPosition, 1.0);
