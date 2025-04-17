@@ -197,8 +197,7 @@ export class InputHandler {
         const objName = Object.keys(this.shapeManager.objVao).length.toString();
         this.shapeManager.addOBJ(objName, objText);
 
-        this.shapes[this.selectedIndex].setNewVao(
-            this.shapeManager.objVao[objName], this.shapeManager.objNumIndices[objName]);
+        this.shapes[this.selectedIndex].vao = this.shapeManager.objVao[objName];
         // old object can be too big
         this.shapes[this.selectedIndex].scalingMatrix = glm.mat4.create();
     }

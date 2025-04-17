@@ -2,36 +2,23 @@ import {LocalTransformationObject} from "../transformation_object/local_transfor
 
 export class Shape extends LocalTransformationObject {
     vao;
-    numIndices;
-
     coordinateSystemVao;
-    coordinateSystemNumIndices;
 
     selected = false;
 
-    constructor(vao, numIndices, coordinateSystemVao, coordinateSystemNumIndices) {
+    constructor(vao, coordinateSystemVao) {
         super();
+
         this.vao = vao;
-        this.numIndices = numIndices;
         this.coordinateSystemVao = coordinateSystemVao;
-        this.coordinateSystemNumIndices = coordinateSystemNumIndices;
     }
 
-    draw(gl) {
-        gl.bindVertexArray(this.vao);
-        gl.drawElements(gl.TRIANGLES, this.numIndices, gl.UNSIGNED_SHORT, 0);
-        gl.bindVertexArray(null);
+    draw() {
+        this.vao.draw();
 
         // show coordinate axes
         if (this.selected) {
-            gl.bindVertexArray(this.coordinateSystemVao);
-            gl.drawElements(gl.LINES, this.coordinateSystemNumIndices, gl.UNSIGNED_SHORT, 0);
-            gl.bindVertexArray(null);
+            this.coordinateSystemVao.draw();
         }
-    }
-
-    setNewVao(vao, numIndices) {
-        this.vao = vao;
-        this.numIndices = numIndices;
     }
 }

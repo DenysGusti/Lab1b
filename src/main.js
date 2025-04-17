@@ -5,6 +5,10 @@ import {InputHandler} from "./input_handler.js";
 import {Viewer} from "./objects/viewer.js";
 import {Coefficient} from "./coefficient.js";
 import {GlobalTransformationObject} from "./transformation_object/global_transformation_object.js";
+import {baseVertexShaderSourceCode} from "./shaders/base/vertex.js";
+import {baseFragmentShaderSourceCode} from "./shaders/base/fragment.js";
+import {gourandVertexShaderSourceCode} from "./shaders/gourand/vertex.js";
+import {gourandFragmentShaderSourceCode} from "./shaders/gourand/fragment.js";
 
 async function main() {
     const canvas = document.getElementById("glCanvas");
@@ -30,8 +34,15 @@ async function main() {
     const global = new GlobalTransformationObject();
     const coefficient = new Coefficient([0.1, 0.1, 0.1], [1, 1, 1], [1, 1, 1], 120);
 
-    const program = new Program(gl);
-    const shapeManager = new ShapeManager(gl, program);
+    const programs = {
+        "base": new Program(gl, baseVertexShaderSourceCode, baseFragmentShaderSourceCode),
+        "gourand": new Program(gl, gourandVertexShaderSourceCode, gourandFragmentShaderSourceCode),
+
+    };
+
+    let currentProgram = programs["gourand"].activate();
+
+    const shapeManager = new ShapeManager(gl, currentProgram);
 
     await shapeManager.addOBJFromFile("bunny", "sampleModels/bunny.obj");
     await shapeManager.addOBJFromFile("cube", "sampleModels/cube.obj");
@@ -65,12 +76,14 @@ async function main() {
     glm.mat4.perspective(projectionMatrix, glm.glMatrix.toRadian(45), canvas.width / canvas.height, 0.1, 100.0);
 
     const drawFrame = () => {
+        currentProgram = programs["gourand"].activate();
+
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-        program.setUniforms(camera, pointLightSource, global, coefficient);
+        currentProgram.setUniforms(camera, pointLightSource, global, coefficient);
 
         for (const shape of shapes) {
-            program.setModelUniforms(shape, camera, global);
-            shape.draw(gl);
+            currentProgram.setModelUniforms(shape, camera, global);
+            shape.draw();
         }
         window.requestAnimationFrame(drawFrame);
     };

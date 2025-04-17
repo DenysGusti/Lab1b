@@ -1,8 +1,4 @@
 import * as glm from '../gl-matrix';
-import {baseVertexShaderSourceCode} from "./base/vertex.js";
-import {baseFragmentShaderSourceCode} from "./base/fragment.js";
-import {gourandVertexShaderSourceCode} from "./gourand/vertex.js";
-import {gourandFragmentShaderSourceCode} from "./gourand/fragment.js";
 
 export class Program {
     gl;
@@ -30,9 +26,9 @@ export class Program {
     coefficientSpecularUniform;
     coefficientShininessUniform;
 
-    constructor(gl) {
+    constructor(gl, vertexShaderSourceCode, fragmentShaderSourceCode) {
         this.gl = gl;
-        this.createProgram();
+        this.createProgram(vertexShaderSourceCode, fragmentShaderSourceCode);
     }
 
     createShader(type, source) {
@@ -48,11 +44,9 @@ export class Program {
         console.log(this.gl.getShaderInfoLog(shader));
     }
 
-    createProgram() {
-        // const vertexShader = this.createShader(this.gl.VERTEX_SHADER, baseVertexShaderSourceCode);
-        // const fragmentShader = this.createShader(this.gl.FRAGMENT_SHADER, baseFragmentShaderSourceCode);
-        const vertexShader = this.createShader(this.gl.VERTEX_SHADER, gourandVertexShaderSourceCode);
-        const fragmentShader = this.createShader(this.gl.FRAGMENT_SHADER, gourandFragmentShaderSourceCode);
+    createProgram(vertexShaderSourceCode, fragmentShaderSourceCode) {
+        const vertexShader = this.createShader(this.gl.VERTEX_SHADER, vertexShaderSourceCode);
+        const fragmentShader = this.createShader(this.gl.FRAGMENT_SHADER, fragmentShaderSourceCode);
 
         this.program = this.gl.createProgram();
 
@@ -85,9 +79,12 @@ export class Program {
             this.coefficientDiffuseUniform = this.gl.getUniformLocation(this.program, 'coefficient.diffuse');
             this.coefficientSpecularUniform = this.gl.getUniformLocation(this.program, 'coefficient.specular');
             this.coefficientShininessUniform = this.gl.getUniformLocation(this.program, 'coefficient.shininess');
-
-            this.gl.useProgram(this.program);
         }
+    }
+
+    activate() {
+        this.gl.useProgram(this.program);
+        return this;
     }
 
     setUniforms(camera, light, global, coefficient) {
