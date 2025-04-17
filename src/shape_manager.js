@@ -12,7 +12,8 @@ import {
 } from "./geometry/coordinate_system.js";
 import {Shape} from "./objects/shape.js";
 import {OBJParser} from "./obj_parser.js";
-import {Vao} from "./vao.js";
+import {Vao} from "./objects/vao.js";
+import {SelectableObject} from "./objects/selectable_object.js";
 
 export class ShapeManager {
     gl;
@@ -46,7 +47,7 @@ export class ShapeManager {
     }
 
     createCube(translateVec) {
-        const shape = new Shape(this.cubeVao, this.coordinateSystemVao);
+        const shape = new Shape(this.cubeVao, this.createSelectableObject());
 
         const cubeSizeMultiplier = 0.5;
         shape.scale([cubeSizeMultiplier, cubeSizeMultiplier, cubeSizeMultiplier]);
@@ -56,13 +57,17 @@ export class ShapeManager {
     }
 
     createOctahedron(translateVec) {
-        const shape = new Shape(this.octahedronVao, this.coordinateSystemVao);
+        const shape = new Shape(this.octahedronVao, this.createSelectableObject());
 
         const octahedronSizeMultiplier = 0.70710678118;
         shape.scale([octahedronSizeMultiplier, octahedronSizeMultiplier, octahedronSizeMultiplier]);
         shape.translate(translateVec);
 
         return shape;
+    }
+
+    createSelectableObject() {
+        return new SelectableObject(this.coordinateSystemVao);
     }
 
     addOBJ(name, objText) {
@@ -77,7 +82,7 @@ export class ShapeManager {
     }
 
     createOBJShape(name, translateVec, scaleFactor) {
-        const shape = new Shape(this.objVao[name], this.coordinateSystemVao);
+        const shape = new Shape(this.objVao[name], this.createSelectableObject());
 
         shape.scale([scaleFactor, scaleFactor, scaleFactor]);
         shape.translate(translateVec);

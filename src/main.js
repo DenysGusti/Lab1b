@@ -29,10 +29,6 @@ async function main() {
     gl.cullFace(gl.BACK);
     gl.frontFace(gl.CCW);
 
-    const camera = new Viewer([0, 0, 10], [0, 0, -1], 45, canvas.width / canvas.height);
-    const pointLightSource = new Viewer([0, 10, 0], [0, 1, 0], 45, 1.);
-    const coefficient = new Coefficient([0.1, 0.1, 0.1], [1, 1, 1], [1, 1, 1], 120);
-
     const programs = {
         "base": new Program(gl, baseVertexShaderSourceCode, baseFragmentShaderSourceCode),
         "gourand": new Program(gl, gourandVertexShaderSourceCode, gourandFragmentShaderSourceCode),
@@ -42,8 +38,6 @@ async function main() {
     // attributes are shares across programs, uniforms not
     // I think that base optimizes out normals, everything is dark, so gourand
     const shapeManager = new ShapeManager(gl, programs["gourand"].activate());
-
-    const global = new GlobalCoordinateSystem(shapeManager.coordinateSystemVao);
 
     await shapeManager.addOBJFromFile("bunny", "sampleModels/bunny.obj");
     await shapeManager.addOBJFromFile("cube", "sampleModels/cube.obj");
@@ -71,28 +65,36 @@ async function main() {
         shapeManager.createCube([SPACING, -SPACING, 0]),
     ];
 
-    new InputHandler(shapeManager, shapes, camera, global);
+    const camera = new Viewer([0, 0, 10], [0, 0, -1], 45, canvas.width / canvas.height, shapeManager.createSelectableObject());
+    const light = new Viewer([0, 10, 0], [0, 1, 0], 45, 1., shapeManager.createSelectableObject());
+    const global = new GlobalCoordinateSystem(shapeManager.createSelectableObject());
+    const coefficient = new Coefficient([0.3, 0.3, 0.3], [0.8, 0.8, 0.8], [1, 1, 1], 120);
 
-    const projectionMatrix = glm.mat4.create();
-    glm.mat4.perspective(projectionMatrix, glm.glMatrix.toRadian(45), canvas.width / canvas.height, 0.1, 100.0);
+    const uniforms = [camera, light, global, coefficient];
 
+    new InputHandler(shapeManager, shapes, global, camera, light);
+
+    light.selectableObject.selected = true;
     const drawFrame = () => {
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
         // draw global coordinate axes without lighting
-        programs["base"].activate().setUniformsGCS(camera, pointLightSource, global, coefficient);
+        programs["base"].activate().setUniforms(glm.mat4.create(), ...uniforms);
         global.selectableObject.drawCoordinateSystem();
+        programs["base"].activate().setUniforms(light.getTransformationMatrix(), ...uniforms);
+        light.selectableObject.drawCoordinateSystem();
 
         for (const shape of shapes) {
-            programs["gourand"].activate().setUniforms(shape, camera, pointLightSource, global, coefficient);
+            programs["gourand"].activate().setUniforms(shape.getTransformationMatrix(), ...uniforms);
             shape.draw();
 
             // draw coordinate axes without lighting
-            programs["base"].activate().setUniforms(shape, camera, pointLightSource, global, coefficient);
+            programs["base"].activate().setUniforms(shape.getTransformationMatrix(), ...uniforms);
             shape.selectableObject.drawCoordinateSystem();
         }
         window.requestAnimationFrame(drawFrame);
     };
+
     window.requestAnimationFrame(drawFrame);
 }
 

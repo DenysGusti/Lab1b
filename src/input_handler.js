@@ -3,17 +3,19 @@ import * as glm from './gl-matrix';
 export class InputHandler {
     shapeManager;
     shapes;
-    camera;
     global;
+    camera;
+    light;
 
     selectedIndex = -1;
     cameraMode = true;
 
-    constructor(shapeManager, shapes, camera, global) {
+    constructor(shapeManager, shapes, global, camera, light) {
         this.shapeManager = shapeManager;
         this.shapes = shapes;
-        this.camera = camera;
         this.global = global;
+        this.camera = camera;
+        this.light = light;
 
         this.initKeyboardControls();
         this.initMouseControls();

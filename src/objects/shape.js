@@ -1,15 +1,14 @@
 import {LocalTransformationObject} from "../transformation_object/local_transformation_object.js";
-import {SelectableObject} from "./selectable_object.js";
 
 export class Shape extends LocalTransformationObject {
     vao;
     selectableObject;
 
-    constructor(vao, coordinateSystemVao) {
+    constructor(vao, selectableObject) {
         super();
 
         this.vao = vao;
-        this.selectableObject = new SelectableObject(coordinateSystemVao);
+        this.selectableObject = selectableObject;
     }
 
     draw() {

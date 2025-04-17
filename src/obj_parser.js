@@ -1,5 +1,7 @@
 // based on https://webglfundamentals.org/webgl/lessons/webgl-load-obj.html
 export class OBJParser {
+    static DEFAULT_COLOR = [0.5, 0.8, 0.8];
+
     name;
     vertices = []; // triangle vertices (x, y, z), ccw by default
     texCoords = [];
@@ -71,12 +73,11 @@ export class OBJParser {
         const vertexData = [];
 
         for (let i = 0; i < this.vertices.length; i += 9) { // Process 3 vertices (1 triangle) at a time
-            const randomColor = [Math.random(), Math.random(), Math.random()];
 
             for (let j = 0; j < 9; j += 3) {
                 const vertex = this.vertices.slice(i + j, i + j + 3);
                 const normal = this.normals.slice(i + j, i + j + 3);
-                vertexData.push(...vertex, ...randomColor, ...normal);
+                vertexData.push(...vertex, ...OBJParser.DEFAULT_COLOR, ...normal);
             }
         }
 

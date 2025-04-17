@@ -36,6 +36,7 @@ uniform mat3 normal;    // inverseTranspose(mat3(camera.view * global.transforma
 uniform Coefficient coefficient;
 
 void main() {
+    // lighting calculations happen in view space
     vec4 viewPosition = camera.view * global.transformation * model.transformation * vec4(vertexPosition, 1.0);
     gl_Position = camera.projection * viewPosition;
     
