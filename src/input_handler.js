@@ -60,7 +60,7 @@ export class InputHandler {
             const deltaX = (event.clientX - lastX) * step;
             const deltaY = (event.clientY - lastY) * step;
 
-            this.camera.translate([deltaX, -deltaY, 0]);
+            this.camera.translate([-deltaX, deltaY, 0]);
 
             lastX = event.clientX;
             lastY = event.clientY;

@@ -93,11 +93,11 @@ export class Program {
     }
 
     setGlobalUniforms(camera, light, global, coefficient) {
-        this.gl.uniform3fv(this.cameraPositionUniform, camera.eye);
+        this.gl.uniform3fv(this.cameraPositionUniform, camera.getPosition());
         this.gl.uniformMatrix4fv(this.cameraProjectionUniform, false, camera.projectionMatrix);
         this.gl.uniformMatrix4fv(this.cameraViewUniform, false, camera.getViewMatrix());
 
-        this.gl.uniform3fv(this.lightPositionUniform, light.eye);
+        this.gl.uniform3fv(this.lightPositionUniform, light.getPosition());
         this.gl.uniformMatrix4fv(this.lightProjectionUniform, false, light.projectionMatrix);
         this.gl.uniformMatrix4fv(this.lightViewUniform, false, light.getViewMatrix());
 

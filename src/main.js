@@ -65,8 +65,8 @@ async function main() {
         shapeManager.createCube([SPACING, -SPACING, 0]),
     ];
 
-    const camera = new Viewer([0, 0, 10], [0, 0, -1], 45, canvas.width / canvas.height, shapeManager.createSelectableObject());
-    const light = new Viewer([0, 10, 0], [0, 1, 0], 45, 1., shapeManager.createSelectableObject());
+    const camera = new Viewer([0, 0, 10], null, [0, 0, -1], 45, canvas.width / canvas.height, shapeManager.createSelectableObject());
+    const light = new Viewer([0, 10, 0], glm.vec3.create(), null, 45, 1., shapeManager.createSelectableObject());
     const global = new GlobalCoordinateSystem(shapeManager.createSelectableObject());
     const coefficient = new Coefficient([0.3, 0.3, 0.3], [0.8, 0.8, 0.8], [1, 1, 1], 120);
 
