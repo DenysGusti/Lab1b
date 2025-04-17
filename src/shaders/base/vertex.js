@@ -13,10 +13,6 @@ struct Viewer {
     mat4 view;
 };
 
-struct TransformationObject {
-    mat4 transformation;
-};
-
 struct Coefficient {
     vec3 ambient;
     vec3 diffuse;
@@ -24,20 +20,17 @@ struct Coefficient {
     float shininess;    
 };
 
+uniform Coefficient coefficient;
+
 uniform Viewer camera;
 uniform Viewer light;
 
-uniform TransformationObject global;
-uniform TransformationObject model;
-
-// it's easier to compute it in js
-uniform mat3 normal;    // inverseTranspose(mat3(camera.view * global.transformation * model.transformation))
-
-uniform Coefficient coefficient;
+// global * local or only global
+uniform mat4 transformation;
+// inverseTranspose(mat3(camera.view * transformation))
+uniform mat3 normal;    // it's better to compute it in js
 
 void main() {
-    vec4 viewPosition = camera.view * global.transformation * model.transformation * vec4(vertexPosition, 1.0);
-    gl_Position = camera.projection * viewPosition;
-
-    fragmentColor = vertexColor.rgb;      
+    fragmentColor = vertexColor;
+    gl_Position = camera.projection * camera.view * transformation * vec4(vertexPosition, 1.0);
 }`;

@@ -69,36 +69,37 @@ async function main() {
     const camera = new Viewer([0, 0, 10], null, [0, 0, -1], 45, canvas.width / canvas.height, shapeManager.createSelectableObject());
     const light = new Viewer([0, 10, 0], glm.vec3.create(), null, 45, 1., shapeManager.createSelectableObject());
     const global = new GlobalCoordinateSystem(shapeManager.createSelectableObject());
-    const coefficient = new Coefficient([0.3, 0.3, 0.3], [0.8, 0.8, 0.8], [1, 1, 1], 120);
+    const coefficient = new Coefficient([0.2, 0.2, 0.2], [0.8, 0.8, 0.8], [1, 1, 1], 120);
 
-    const uniforms = [camera, light, global, coefficient];
+    const uniformStructs = [coefficient, camera, light];
 
     new InputHandler(shapeManager, shapes, global, camera, light);
 
     const drawFrame = () => {
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
+        programs["base"].activate().setUniformStructs(...uniformStructs);
+        programs["gourand"].activate().setUniformStructs(...uniformStructs);
+
         // draw global coordinate axes without lighting
-        programs["base"].activate().setUniforms(glm.mat4.create(), ...uniforms);
+        programs["base"].activate().setUniformTransformation(global.getTransformationMatrix(), camera);
         global.selectableObject.drawCoordinateSystem();
-        const tmp = glm.mat4.create();
-        glm.mat4.invert(tmp, global.getTransformationMatrix());
-        glm.mat4.multiply(tmp, tmp, light.getTransformationMatrix());
-        programs["base"].activate().setUniforms(tmp, ...uniforms);
+
+        // draw light coordinate axes without lighting
+        programs["base"].activate().setUniformTransformation(light.getTransformationMatrix(), camera);
         light.selectableObject.drawCoordinateSystem();
 
-        if (light.selectableObject.selected) {
-            console.log("light");
-            console.log(light.getPosition());
-        }
-
         for (const shape of shapes) {
-            programs["gourand"].activate().setUniforms(shape.getTransformationMatrix(), ...uniforms);
-            shape.draw();
+            const transformation = glm.mat4.create();
+            glm.mat4.multiply(transformation, global.getTransformationMatrix(), shape.getTransformationMatrix());
 
-            // draw coordinate axes without lighting
-            programs["base"].activate().setUniforms(shape.getTransformationMatrix(), ...uniforms);
+            // draw shape's coordinate axes without lighting
+            programs["base"].activate().setUniformTransformation(transformation, camera);
             shape.selectableObject.drawCoordinateSystem();
+
+            // draw shape with lighting
+            programs["gourand"].activate().setUniformTransformation(transformation, camera);
+            shape.vao.draw();
         }
         window.requestAnimationFrame(drawFrame);
     };

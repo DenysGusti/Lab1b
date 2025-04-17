@@ -13,10 +13,6 @@ struct Viewer {
     mat4 view;
 };
 
-struct TransformationObject {
-    mat4 transformation;
-};
-
 struct Coefficient {
     vec3 ambient;
     vec3 diffuse;
@@ -24,29 +20,29 @@ struct Coefficient {
     float shininess;    
 };
 
+uniform Coefficient coefficient;
+
 uniform Viewer camera;
 uniform Viewer light;
 
-uniform TransformationObject global;
-uniform TransformationObject model;
-
-// it's easier to compute it in js
-uniform mat3 normal;    // inverseTranspose(mat3(camera.view * global.transformation * model.transformation))
-
-uniform Coefficient coefficient;
+// global * local or only global
+uniform mat4 transformation;
+// inverseTranspose(mat3(camera.view * transformation))
+uniform mat3 normal;    // it's better to compute it in js
 
 void main() {
     // lighting calculations happen in view space
-    vec4 viewPosition = camera.view * global.transformation * model.transformation * vec4(vertexPosition, 1.0);
-    gl_Position = camera.projection * viewPosition;
-    
-    vec3 lightVector = normalize(light.position - viewPosition.xyz);
+    vec4 viewPosition = camera.view * transformation * vec4(vertexPosition, 1.0);
+    vec4 lightPosition = camera.view * vec4(light.position, 1.0);
+
+    vec3 lightVector = normalize(lightPosition.xyz - viewPosition.xyz);
     vec3 normalVector = normalize(normal * vertexNormal);
-    
-    vec3 ambientColor = vertexColor.rgb * coefficient.ambient;
-    
+
+    vec3 ambientColor = vertexColor * coefficient.ambient;
+
     float diffuseIntensity = max(dot(normalVector, lightVector), 0.);
-    vec3 diffuseColor = vertexColor.rgb * diffuseIntensity * coefficient.diffuse;
+    vec3 diffuseColor = vertexColor * diffuseIntensity * coefficient.diffuse;
 
     fragmentColor = ambientColor + diffuseColor;      
+    gl_Position = camera.projection * viewPosition;
 }`;

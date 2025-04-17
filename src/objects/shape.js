@@ -10,8 +10,4 @@ export class Shape extends LocalTransformationObject {
         this.vao = vao;
         this.selectableObject = selectableObject;
     }
-
-    draw() {
-        this.vao.draw();
-    }
 }

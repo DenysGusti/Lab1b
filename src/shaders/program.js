@@ -8,6 +8,11 @@ export class Program {
     colorAttrib;
     normalAttrib;
 
+    coefficientAmbientUniform;
+    coefficientDiffuseUniform;
+    coefficientSpecularUniform;
+    coefficientShininessUniform;
+
     cameraPositionUniform;
     cameraProjectionUniform;
     cameraViewUniform;
@@ -16,15 +21,9 @@ export class Program {
     lightProjectionUniform;
     lightViewUniform;
 
-    globalTransformationUniform;
-    modelTransformationUniform;
+    transformationUniform;
 
     normalUniform;
-
-    coefficientAmbientUniform;
-    coefficientDiffuseUniform;
-    coefficientSpecularUniform;
-    coefficientShininessUniform;
 
     constructor(gl, vertexShaderSourceCode, fragmentShaderSourceCode) {
         this.gl = gl;
@@ -62,6 +61,11 @@ export class Program {
             this.colorAttrib = this.gl.getAttribLocation(this.program, 'vertexColor');
             this.normalAttrib = this.gl.getAttribLocation(this.program, 'vertexNormal');
 
+            this.coefficientAmbientUniform = this.gl.getUniformLocation(this.program, 'coefficient.ambient');
+            this.coefficientDiffuseUniform = this.gl.getUniformLocation(this.program, 'coefficient.diffuse');
+            this.coefficientSpecularUniform = this.gl.getUniformLocation(this.program, 'coefficient.specular');
+            this.coefficientShininessUniform = this.gl.getUniformLocation(this.program, 'coefficient.shininess');
+
             this.cameraPositionUniform = this.gl.getUniformLocation(this.program, 'camera.position');
             this.cameraProjectionUniform = this.gl.getUniformLocation(this.program, 'camera.projection');
             this.cameraViewUniform = this.gl.getUniformLocation(this.program, 'camera.view');
@@ -70,15 +74,8 @@ export class Program {
             this.lightProjectionUniform = this.gl.getUniformLocation(this.program, 'light.projection');
             this.lightViewUniform = this.gl.getUniformLocation(this.program, 'light.view');
 
-            this.globalTransformationUniform = this.gl.getUniformLocation(this.program, 'global.transformation');
-            this.modelTransformationUniform = this.gl.getUniformLocation(this.program, 'model.transformation');
-
+            this.transformationUniform = this.gl.getUniformLocation(this.program, 'transformation');
             this.normalUniform = this.gl.getUniformLocation(this.program, 'normal');
-
-            this.coefficientAmbientUniform = this.gl.getUniformLocation(this.program, 'coefficient.ambient');
-            this.coefficientDiffuseUniform = this.gl.getUniformLocation(this.program, 'coefficient.diffuse');
-            this.coefficientSpecularUniform = this.gl.getUniformLocation(this.program, 'coefficient.specular');
-            this.coefficientShininessUniform = this.gl.getUniformLocation(this.program, 'coefficient.shininess');
         }
     }
 
@@ -87,12 +84,12 @@ export class Program {
         return this;
     }
 
-    setUniforms(modelTransformation, camera, light, global, coefficient) {
-        this.setGlobalUniforms(camera, light, global, coefficient);
-        this.setModelUniforms(modelTransformation, camera, global);
-    }
+    setUniformStructs(coefficient, camera, light) {
+        this.gl.uniform3fv(this.coefficientAmbientUniform, coefficient.ambient);
+        this.gl.uniform3fv(this.coefficientDiffuseUniform, coefficient.diffuse);
+        this.gl.uniform3fv(this.coefficientSpecularUniform, coefficient.specular);
+        this.gl.uniform1f(this.coefficientShininessUniform, coefficient.shininess);
 
-    setGlobalUniforms(camera, light, global, coefficient) {
         this.gl.uniform3fv(this.cameraPositionUniform, camera.getPosition());
         this.gl.uniformMatrix4fv(this.cameraProjectionUniform, false, camera.projectionMatrix);
         this.gl.uniformMatrix4fv(this.cameraViewUniform, false, camera.getViewMatrix());
@@ -100,27 +97,18 @@ export class Program {
         this.gl.uniform3fv(this.lightPositionUniform, light.getPosition());
         this.gl.uniformMatrix4fv(this.lightProjectionUniform, false, light.projectionMatrix);
         this.gl.uniformMatrix4fv(this.lightViewUniform, false, light.getViewMatrix());
-
-        this.gl.uniformMatrix4fv(this.globalTransformationUniform, false, global.getTransformationMatrix());
-
-        this.gl.uniform3fv(this.coefficientAmbientUniform, coefficient.ambient);
-        this.gl.uniform3fv(this.coefficientDiffuseUniform, coefficient.diffuse);
-        this.gl.uniform3fv(this.coefficientSpecularUniform, coefficient.specular);
-        this.gl.uniform1f(this.coefficientShininessUniform, coefficient.shininess);
     }
 
-    setModelUniforms(modelTransformation, camera, global) {
-        this.gl.uniformMatrix4fv(this.modelTransformationUniform, false, modelTransformation);
+    setUniformTransformation(transformation, camera) {
+        this.gl.uniformMatrix4fv(this.transformationUniform, false, transformation);
 
-        const cameraViewGlobalTransformationModelTransformation = glm.mat4.create();
-        glm.mat4.multiply(cameraViewGlobalTransformationModelTransformation,
-            global.getTransformationMatrix(), modelTransformation);
-        glm.mat4.multiply(cameraViewGlobalTransformationModelTransformation,
-            camera.getViewMatrix(), cameraViewGlobalTransformationModelTransformation);
+        // normalMatrix = inverseTranspose(mat3(camera.view * transformation))
+        const cameraViewTransformation = glm.mat4.create();
+        glm.mat4.multiply(cameraViewTransformation, camera.getViewMatrix(), transformation);
 
-        // inverseTranspose(mat3(camera.view * global.transformation * model.transformation))
         const normalMatrix = glm.mat3.create();
-        glm.mat3.normalFromMat4(normalMatrix, cameraViewGlobalTransformationModelTransformation);
+        glm.mat3.normalFromMat4(normalMatrix, cameraViewTransformation);
+
         this.gl.uniformMatrix3fv(this.normalUniform, false, normalMatrix);
     }
 }
