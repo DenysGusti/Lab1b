@@ -1,6 +1,6 @@
-import {TransformationObject} from "./transformation_object.js";
+import {LocalTransformationObject} from "../transformation_object/local_transformation_object.js";
 
-export class Shape extends TransformationObject {
+export class Shape extends LocalTransformationObject {
     vao;
     numIndices;
 

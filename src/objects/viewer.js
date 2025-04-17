@@ -1,7 +1,7 @@
 import * as glm from '../gl-matrix';
-import {TransformationObject} from "./transformation_object.js";
+import {GlobalTransformationObject} from "../transformation_object/global_transformation_object.js";
 
-export class Viewer extends TransformationObject {
+export class Viewer extends GlobalTransformationObject {
     eye;
     projectionMatrix = glm.mat4.create();
     defaultViewMatrix = glm.mat4.create();

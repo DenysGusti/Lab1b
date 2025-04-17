@@ -1,7 +1,7 @@
 import * as glm from '../gl-matrix';
+import {TransformationObject} from "./transformation_object.js";
 
-// parent class for all objects that will be transformed
-export class TransformationObject {
+export class LocalTransformationObject extends TransformationObject {
     scalingMatrix = glm.mat4.create();
     rotationTranslationMatrix = glm.mat4.create();
 
@@ -25,7 +25,6 @@ export class TransformationObject {
         glm.mat4.translate(this.rotationTranslationMatrix, this.rotationTranslationMatrix, translateVec);
     }
 
-    // R * T * S
     getTransformationMatrix() {
         const modelMatrix = glm.mat4.create();
         glm.mat4.multiply(modelMatrix, this.rotationTranslationMatrix, this.scalingMatrix);

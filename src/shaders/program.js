@@ -1,5 +1,4 @@
 import * as glm from '../gl-matrix';
-import {printMat3} from "../utils.js";
 import {baseVertexShaderSourceCode} from "./base/vertex.js";
 import {baseFragmentShaderSourceCode} from "./base/fragment.js";
 import {gourandVertexShaderSourceCode} from "./gourand/vertex.js";
