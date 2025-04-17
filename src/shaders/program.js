@@ -87,7 +87,17 @@ export class Program {
         return this;
     }
 
-    setUniforms(camera, light, global, coefficient) {
+    setUniforms(model, camera, light, global, coefficient) {
+        this.setGlobalUniforms(camera, light, global, coefficient);
+        this.setModelUniforms(model, camera, global);
+    }
+
+    setUniformsGCS(camera, light, global, coefficient) {
+        this.setGlobalUniforms(camera, light, global, coefficient);
+        this.setGlobalCSUniforms(camera, global);
+    }
+
+    setGlobalUniforms(camera, light, global, coefficient) {
         this.gl.uniform3fv(this.cameraPositionUniform, camera.eye);
         this.gl.uniformMatrix4fv(this.cameraProjectionUniform, false, camera.projectionMatrix);
         this.gl.uniformMatrix4fv(this.cameraViewUniform, false, camera.getViewMatrix());
@@ -102,6 +112,18 @@ export class Program {
         this.gl.uniform3fv(this.coefficientDiffuseUniform, coefficient.diffuse);
         this.gl.uniform3fv(this.coefficientSpecularUniform, coefficient.specular);
         this.gl.uniform1f(this.coefficientShininessUniform, coefficient.shininess);
+    }
+
+    setGlobalCSUniforms(camera, global) {
+        this.gl.uniformMatrix4fv(this.modelTransformationUniform, false, glm.mat4.create());
+
+        const cameraViewGlobalTransformation = glm.mat4.create();
+        glm.mat4.multiply(cameraViewGlobalTransformation, camera.getViewMatrix(), global.getTransformationMatrix());
+
+        // inverseTranspose(mat3(camera.view * global.transformation))
+        const normalMatrix = glm.mat3.create();
+        glm.mat3.normalFromMat4(normalMatrix, cameraViewGlobalTransformation);
+        this.gl.uniformMatrix3fv(this.normalUniform, false, normalMatrix);
     }
 
     setModelUniforms(model, camera, global) {

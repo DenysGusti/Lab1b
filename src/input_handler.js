@@ -76,25 +76,33 @@ export class InputHandler {
             case "7":
             case "8":
             case "9":
-                if (this.selectedIndex >= 0)
-                    this.shapes[this.selectedIndex].selected = false;
+                if (this.selectedIndex >= 0) {
+                    this.shapes[this.selectedIndex].selectableObject.selected = false;
+                } else {
+                    this.global.selectableObject.selected = false;
+                }
 
                 this.selectedIndex = parseInt(event.key) - 1;
-                this.shapes[this.selectedIndex].selected = true;
+                this.shapes[this.selectedIndex].selectableObject.selected = true;
                 this.cameraMode = false;
                 break;
 
             case "0":
-                if (this.selectedIndex >= 0)
-                    this.shapes[this.selectedIndex].selected = false;
+                if (this.selectedIndex >= 0) {
+                    this.shapes[this.selectedIndex].selectableObject.selected = false;
+                }
 
                 this.selectedIndex = -1;
+                this.global.selectableObject.selected = true;
                 this.cameraMode = false;
                 break;
 
             case " ":
-                if (this.selectedIndex >= 0)
-                    this.shapes[this.selectedIndex].selected = false;
+                if (this.selectedIndex >= 0) {
+                    this.shapes[this.selectedIndex].selectableObject.selected = false;
+                } else {
+                    this.global.selectableObject.selected = false;
+                }
 
                 this.selectedIndex = -1;
                 this.cameraMode = true;
@@ -207,8 +215,9 @@ export class InputHandler {
         if (!file) return;
         // if not chosen, model loads into center shape
         if (this.selectedIndex < 0) {
+            this.global.selectableObject.selected = false;
             this.selectedIndex = 4;
-            this.shapes[this.selectedIndex].selected = true;
+            this.shapes[this.selectedIndex].selectableObject.selected = true;
             this.cameraMode = false;
         }
 
