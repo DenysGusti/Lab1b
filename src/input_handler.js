@@ -1,14 +1,21 @@
 import * as glm from './gl-matrix';
 
 export class InputHandler {
+    static modes = {
+        shape: 0,
+        global: 1,
+        light: 2,
+        camera: 3
+    }
+
     shapeManager;
     shapes;
     global;
     camera;
     light;
 
+    currentMode = InputHandler.modes.camera;
     selectedIndex = -1;
-    cameraMode = true;
 
     constructor(shapeManager, shapes, global, camera, light) {
         this.shapeManager = shapeManager;
@@ -25,12 +32,7 @@ export class InputHandler {
     initKeyboardControls() {
         document.addEventListener("keydown", (event) => {
             this.handleSelection(event);
-
-            if (this.cameraMode) {
-                this.handleCameraMovement(event);
-            } else {
-                this.handleTransformation(event);
-            }
+            this.handleTransformation(event);
         });
     }
 
@@ -55,7 +57,8 @@ export class InputHandler {
         });
 
         canvas.addEventListener("mousemove", (event) => {
-            if (!isDragging) return;
+            if (!isDragging)
+                return;
 
             const deltaX = (event.clientX - lastX) * step;
             const deltaY = (event.clientY - lastY) * step;
@@ -80,117 +83,148 @@ export class InputHandler {
             case "9":
                 if (this.selectedIndex >= 0) {
                     this.shapes[this.selectedIndex].selectableObject.selected = false;
-                } else {
-                    this.global.selectableObject.selected = false;
                 }
-
                 this.selectedIndex = parseInt(event.key) - 1;
+
                 this.shapes[this.selectedIndex].selectableObject.selected = true;
-                this.cameraMode = false;
+                this.global.selectableObject.selected = false;
+                this.light.selectableObject.selected = false;
+                this.camera.selectableObject.selected = false;
+
+                this.currentMode = InputHandler.modes.shape;
+
                 break;
 
             case "0":
                 if (this.selectedIndex >= 0) {
                     this.shapes[this.selectedIndex].selectableObject.selected = false;
                 }
-
                 this.selectedIndex = -1;
+
                 this.global.selectableObject.selected = true;
-                this.cameraMode = false;
+                this.light.selectableObject.selected = false;
+                this.camera.selectableObject.selected = false;
+
+                this.currentMode = InputHandler.modes.global;
+
+                break;
+
+            case "L":
+                if (this.selectedIndex >= 0) {
+                    this.shapes[this.selectedIndex].selectableObject.selected = false;
+                }
+                this.selectedIndex = -1;
+
+                this.global.selectableObject.selected = false;
+                this.light.selectableObject.selected = true;
+                this.camera.selectableObject.selected = false;
+
+                this.currentMode = InputHandler.modes.light;
+
                 break;
 
             case " ":
                 if (this.selectedIndex >= 0) {
                     this.shapes[this.selectedIndex].selectableObject.selected = false;
-                } else {
-                    this.global.selectableObject.selected = false;
                 }
-
                 this.selectedIndex = -1;
-                this.cameraMode = true;
-                break;
-        }
-    }
 
-    handleCameraMovement(event) {
-        const step = 0.1;
-        switch (event.key) {
-            case "ArrowRight":
-                this.camera.translate([-step, 0, 0]);
-                break;
-            case "ArrowLeft":
-                this.camera.translate([step, 0, 0]);
-                break;
-            case "ArrowUp":
-                this.camera.translate([0, -step, 0]);
-                break;
-            case "ArrowDown":
-                this.camera.translate([0, step, 0]);
+                this.global.selectableObject.selected = false;
+                this.light.selectableObject.selected = false;
+                this.camera.selectableObject.selected = true;
+
+                this.currentMode = InputHandler.modes.camera;
+
                 break;
         }
     }
 
     handleTransformation(event) {
-        const step = 0.1;
+        const stepScale = 0.1;
+        const stepTranslation = 0.1;
         const angle = glm.glMatrix.toRadian(5);
 
-        const selectedObject = this.selectedIndex >= 0 ? this.shapes[this.selectedIndex] : this.global;
+        const selectedObject = (() => {
+            switch (this.currentMode) {
+                case InputHandler.modes.shape:
+                    return this.shapes[this.selectedIndex];
+                case InputHandler.modes.global:
+                    return this.global;
+                case InputHandler.modes.light:
+                    return this.light;
+                case InputHandler.modes.camera:
+                    return this.camera;
+            }
+        })();
 
-        switch (event.key) {
-            case "a":
-                selectedObject.scale([0.9, 1, 1]);
-                break;
-            case "A":
-                selectedObject.scale([1.1, 1, 1]);
-                break;
-            case "b":
-                selectedObject.scale([1, 0.9, 1]);
-                break;
-            case "B":
-                selectedObject.scale([1, 1.1, 1]);
-                break;
-            case "c":
-                selectedObject.scale([1, 1, 0.9]);
-                break;
-            case "C":
-                selectedObject.scale([1, 1, 1.1]);
-                break;
-            case "i":
-                selectedObject.rotateX(-angle);
-                break;
-            case "k":
-                selectedObject.rotateX(angle);
-                break;
-            case "o":
-                selectedObject.rotateY(-angle);
-                break;
-            case "u":
-                selectedObject.rotateY(angle);
-                break;
-            case "l":
-                selectedObject.rotateZ(-angle);
-                break;
-            case "j":
-                selectedObject.rotateZ(angle);
-                break;
-            case "ArrowRight":
-                selectedObject.translate([step, 0, 0]);
-                break;
-            case "ArrowLeft":
-                selectedObject.translate([-step, 0, 0]);
-                break;
-            case "ArrowUp":
-                selectedObject.translate([0, step, 0]);
-                break;
-            case "ArrowDown":
-                selectedObject.translate([0, -step, 0]);
-                break;
-            case ",":
-                selectedObject.translate([0, 0, step]);
-                break;
-            case ".":
-                selectedObject.translate([0, 0, -step]);
-                break;
+        switch (this.currentMode) {
+            case InputHandler.modes.shape:
+            case InputHandler.modes.global: {
+                switch (event.key) {
+                    case "a":
+                        selectedObject.scale([1 - stepScale, 1, 1]);
+                        break;
+                    case "A":
+                        selectedObject.scale([1 + stepScale, 1, 1]);
+                        break;
+                    case "b":
+                        selectedObject.scale([1, 1 - stepScale, 1]);
+                        break;
+                    case "B":
+                        selectedObject.scale([1, 1 + stepScale, 1]);
+                        break;
+                    case "c":
+                        selectedObject.scale([1, 1, 1 - stepScale]);
+                        break;
+                    case "C":
+                        selectedObject.scale([1, 1, 1 + stepScale]);
+                        break;
+                }
+            }
+            case InputHandler.modes.light: {
+                switch (event.key) {
+                    case "i":
+                        selectedObject.rotateX(-angle);
+                        break;
+                    case "k":
+                        selectedObject.rotateX(angle);
+                        break;
+                    case "o":
+                        selectedObject.rotateY(-angle);
+                        break;
+                    case "u":
+                        selectedObject.rotateY(angle);
+                        break;
+                    case "l":
+                        selectedObject.rotateZ(-angle);
+                        break;
+                    case "j":
+                        selectedObject.rotateZ(angle);
+                        break;
+                }
+            }
+            case InputHandler.modes.camera: {
+                switch (event.key) {
+                    case "ArrowRight":
+                        selectedObject.translate([stepTranslation, 0, 0]);
+                        break;
+                    case "ArrowLeft":
+                        selectedObject.translate([-stepTranslation, 0, 0]);
+                        break;
+                    case "ArrowUp":
+                        selectedObject.translate([0, stepTranslation, 0]);
+                        break;
+                    case "ArrowDown":
+                        selectedObject.translate([0, -stepTranslation, 0]);
+                        break;
+                    case ",":
+                        selectedObject.translate([0, 0, stepTranslation]);
+                        break;
+                    case ".":
+                        selectedObject.translate([0, 0, -stepTranslation]);
+                        break;
+                }
+            }
         }
     }
 
@@ -214,13 +248,19 @@ export class InputHandler {
 
     handleOBJFile(event) {
         const file = event.target.files[0];
-        if (!file) return;
+        if (!file)
+            return;
         // if not chosen, model loads into center shape
-        if (this.selectedIndex < 0) {
-            this.global.selectableObject.selected = false;
+        if (this.currentMode !== InputHandler.modes.shape) {
+            if (this.selectedIndex >= 0) {
+                this.shapes[this.selectedIndex].selectableObject.selected = false;
+            }
             this.selectedIndex = 4;
+
             this.shapes[this.selectedIndex].selectableObject.selected = true;
-            this.cameraMode = false;
+            this.global.selectableObject.selected = false;
+            this.light.selectableObject.selected = false;
+            this.camera.selectableObject.selected = false;
         }
 
         const reader = new FileReader();

@@ -9,6 +9,7 @@ import {baseVertexShaderSourceCode} from "./shaders/base/vertex.js";
 import {baseFragmentShaderSourceCode} from "./shaders/base/fragment.js";
 import {gourandVertexShaderSourceCode} from "./shaders/gourand/vertex.js";
 import {gourandFragmentShaderSourceCode} from "./shaders/gourand/fragment.js";
+import {printMat4} from "./utils.js";
 
 async function main() {
     const canvas = document.getElementById("glCanvas");
@@ -74,15 +75,22 @@ async function main() {
 
     new InputHandler(shapeManager, shapes, global, camera, light);
 
-    light.selectableObject.selected = true;
     const drawFrame = () => {
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
         // draw global coordinate axes without lighting
         programs["base"].activate().setUniforms(glm.mat4.create(), ...uniforms);
         global.selectableObject.drawCoordinateSystem();
-        programs["base"].activate().setUniforms(light.getTransformationMatrix(), ...uniforms);
+        const tmp = glm.mat4.create();
+        glm.mat4.invert(tmp, global.getTransformationMatrix());
+        glm.mat4.multiply(tmp, tmp, light.getTransformationMatrix());
+        programs["base"].activate().setUniforms(tmp, ...uniforms);
         light.selectableObject.drawCoordinateSystem();
+
+        if (light.selectableObject.selected) {
+            console.log("light");
+            console.log(light.getPosition());
+        }
 
         for (const shape of shapes) {
             programs["gourand"].activate().setUniforms(shape.getTransformationMatrix(), ...uniforms);
