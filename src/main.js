@@ -56,16 +56,16 @@ async function main() {
     const SPACING = 2.5;
     const shapes = [
         // shapeManager.createCube([-SPACING, SPACING, 0]),
-        shapeManager.createOBJShape("bunny", [-SPACING, SPACING, 0], 10),
+        shapeManager.createOBJShape("bunny", [-SPACING, SPACING, 0]),
 
         // shapeManager.createOctahedron([0, SPACING, 0]),
-        shapeManager.createOBJShape("cube", [0, SPACING, 0], 1),
+        shapeManager.createOBJShape("cube", [0, SPACING, 0]),
 
         // shapeManager.createCube([SPACING, SPACING, 0]),
-        shapeManager.createOBJShape("teapot", [SPACING, SPACING, 0], 1),
+        shapeManager.createOBJShape("teapot", [SPACING, SPACING, 0]),
 
         // shapeManager.createOctahedron([-SPACING, 0, 0]),
-        shapeManager.createOBJShape("tetrahedron", [-SPACING, 0, 0], 1),
+        shapeManager.createOBJShape("tetrahedron", [-SPACING, 0, 0]),
 
         shapeManager.createCube([0, 0, 0]),
         shapeManager.createOctahedron([SPACING, 0, 0]),

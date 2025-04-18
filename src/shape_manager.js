@@ -81,10 +81,9 @@ export class ShapeManager {
         this.addOBJ(name, objText);
     }
 
-    createOBJShape(name, translateVec, scaleFactor) {
+    createOBJShape(name, translateVec) {
         const shape = new Shape(this.objVao[name], this.createSelectableObject());
 
-        shape.scale([scaleFactor, scaleFactor, scaleFactor]);
         shape.translate(translateVec);
 
         return shape;

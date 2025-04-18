@@ -38,12 +38,12 @@ export const CUBE_VERTICES = [
 ];
 
 export const CUBE_COLORS = [
-    [1, 1, 1], // Front face: white
-    [1, 0, 0], // Back face: red
-    [0, 1, 0], // Top face: green
-    [0, 0, 1], // Bottom face: blue
-    [1, 1, 0], // Right face: yellow
-    [1, 0, 1], // Left face: purple
+    [0.8, 0.8, 0.8], // Front face: white
+    [0.8, 0, 0], // Back face: red
+    [0, 0.8, 0], // Top face: green
+    [0, 0, 0.8], // Bottom face: blue
+    [0.8, 0.8, 0], // Right face: yellow
+    [0.8, 0, 0.8], // Left face: purple
 ];
 
 export const CUBE_NORMALS = [

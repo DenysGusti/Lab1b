@@ -21,7 +21,7 @@ export class Viewer extends GlobalTransformationObject {
     }
 
     getPosition() {
-        let position = glm.vec4.fromValues(0, 0, 0, 1);
+        const position = glm.vec4.fromValues(0, 0, 0, 1);
         glm.vec4.transformMat4(position, position, super.getTransformationMatrix());
         return glm.vec3.fromValues(position[0], position[1], position[2]);
     }

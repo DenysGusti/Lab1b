@@ -41,14 +41,14 @@ export const OCTAHEDRON_VERTICES = [
 ];
 
 export const OCTAHEDRON_COLORS = [
-    [1, 0, 0],  // Red - Top front-left
-    [0, 1, 0],  // Green - Top front-right
-    [0, 0, 1],  // Blue - Top back-right
-    [1, 1, 0],  // Yellow - Top back-left
-    [1, 0, 1],  // Magenta - Bottom front-left
-    [0, 1, 1],  // Cyan - Bottom front-right
-    [1, 0.5, 0], // Orange - Bottom back-right
-    [0.5, 0, 1]  // Purple - Bottom back-left
+    [0.8, 0, 0],  // Red - Top front-left
+    [0, 0.8, 0],  // Green - Top front-right
+    [0, 0, 0.8],  // Blue - Top back-right
+    [0.8, 0.8, 0],  // Yellow - Top back-left
+    [0.8, 0, 0.8],  // Magenta - Bottom front-left
+    [0, 0.8, 0.8],  // Cyan - Bottom front-right
+    [0.8, 0.4, 0], // Orange - Bottom back-right
+    [0.4, 0, 0.8]  // Purple - Bottom back-left
 ];
 
 export const OCTAHEDRON_NORMALS = [
