@@ -1,4 +1,4 @@
-import * as glm from './gl-matrix';
+import * as glm from './gl-matrix/index.js';
 
 export class InputHandler {
     static modes = {

@@ -1,4 +1,4 @@
-import * as glm from '../gl-matrix';
+import * as glm from '../gl-matrix/index.js';
 import {TransformationObject} from "./transformation_object.js";
 
 export class GlobalTransformationObject extends TransformationObject {

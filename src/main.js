@@ -1,4 +1,4 @@
-import * as glm from './gl-matrix';
+import * as glm from './gl-matrix/index.js';
 import {Program} from "./shaders/program.js";
 import {ShapeManager} from "./shape_manager.js";
 import {InputHandler} from "./input_handler.js";

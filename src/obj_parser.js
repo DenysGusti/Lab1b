@@ -1,4 +1,4 @@
-import * as glm from './gl-matrix';
+import * as glm from './gl-matrix/index.js';
 import {printMat4} from "./utils.js";
 
 // based on https://webglfundamentals.org/webgl/lessons/webgl-load-obj.html
@@ -95,9 +95,6 @@ export class OBJParser {
         // put center of a shape in (0, 0, 0)
         const offsetVec = [-(minX + maxX) / 2, -(minY + maxY) / 2, -(minZ + maxZ) / 2];
         glm.mat4.translate(this.boundingBox, this.boundingBox, offsetVec);
-
-        console.log([offsetVec]);
-        printMat4(this.boundingBox);
     }
 
     // interleaved format: (x, y, z, r, g, b, nx, ny, nz) (all f32)
