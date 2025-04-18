@@ -1,26 +1,60 @@
 html, body {
     margin: 0;
-    padding: 25px;
+    padding: 0;
     background-color: #2a2a2a;
     color: white;
     font-family: Arial, sans-serif;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+/* Remove extra vertical gap */
+body {
     display: flex;
-    gap: 20px;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+}
+
+/* Container for canvas + instructions */
+.main-layout {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    max-width: 1200px;
+    box-sizing: border-box;
+}
+
+@media (min-width: 800px) {
+    .main-layout {
+        flex-direction: row;
+        align-items: flex-start;
+        justify-content: center;
+        gap: 20px;
+    }
 }
 
 #glCanvas {
-    width: 750px;
-    height: 750px;
-    /* offensive canvas background color to test opacity/clearing bugs */
-    background-color: #da6052;
+    width: 100%;
+    height: auto;
+    max-height: calc(100vh - 40px); /* Full height minus some margin for spacing */
+    aspect-ratio: 1 / 1;
+    background-color: #da6052;  /* offensive canvas background color to test opacity/clearing bugs */
 }
 
 #instructions {
-    max-width: 400px;
+    width: 100%;
+    max-width: 350px;
     background: rgba(0, 0, 0, 0.8);
     padding: 15px;
     border-radius: 10px;
     font-size: 14px;
+    box-sizing: border-box;
+    overflow-y: auto;
+    max-height: calc(100vh - 40px);
 }
 
 h2 {
@@ -32,33 +66,30 @@ ul {
     padding-left: 20px;
 }
 
-#fileUploadContainer {
-    color: white;
-    font-family: Arial, sans-serif;
-    margin-bottom: 15px;
-    text-align: center;
-}
-
-#fileUploadContainer p {
-    margin-bottom: 10px;
-    font-size: 16px;
-}
-
-/* Hide the default file input */
 #objFileInput {
     display: none;
 }
 
-/* Style the custom file upload button */
+#fileUploadContainer {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 14px;
+}
+
+#fileUploadContainer p {
+    margin-bottom: 8px;
+}
+
 #customFileButton {
     background-color: #444;
     color: white;
-    padding: 10px 15px;
+    padding: 8px 14px;
     border-radius: 5px;
     cursor: pointer;
     display: inline-block;
     border: 1px solid #666;
     transition: background-color 0.3s ease;
+    font-size: 14px;
 }
 
 #customFileButton:hover {

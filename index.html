@@ -8,56 +8,57 @@
     <title>GFX Lab1a</title>
 </head>
 <body>
-<canvas id="glCanvas">
-    HTML5 canvas not supported in your browser!
-</canvas>
+<div class="main-layout">
+    <canvas id="glCanvas">
+        HTML5 canvas not supported in your browser!
+    </canvas>
 
-<div id="instructions">
-    <h2>Interactive Controls</h2>
+    <div id="instructions">
+        <h2>Interactive Controls</h2>
 
-    <h3>1. Selecting Objects</h3>
-    <ul>
-        <li>Press <b>1-9</b> → Select a shape.</li>
-        <li>Press <b>0</b> → Select all shapes.</li>
-        <li>Press <b>Space</b> → Toggle camera mode.</li>
-        <li>Press <b>L</b> → Toggle light mode.</li>
-    </ul>
+        <h3>1. Selecting Objects</h3>
+        <ul>
+            <li>Press <b>1-9</b> → Select a shape.</li>
+            <li>Press <b>0</b> → Select all shapes.</li>
+            <li>Press <b>Space</b> → Toggle camera mode.</li>
+            <li>Press <b>L</b> → Toggle light mode.</li>
+        </ul>
 
-    <h3>2. Scaling Objects</h3>
-    <ul>
-        <li><b>a</b>: Decrease width | <b>A</b>: Increase width</li>
-        <li><b>b</b>: Decrease height | <b>B</b>: Increase height</li>
-        <li><b>c</b>: Decrease depth | <b>C</b>: Increase depth</li>
-    </ul>
+        <h3>2. Scaling Objects</h3>
+        <ul>
+            <li><b>a</b>: Decrease width | <b>A</b>: Increase width</li>
+            <li><b>b</b>: Decrease height | <b>B</b>: Increase height</li>
+            <li><b>c</b>: Decrease depth | <b>C</b>: Increase depth</li>
+        </ul>
 
-    <h3>3. Rotating Objects / Light</h3>
-    <ul>
-        <li><b>i/k</b>: Rotate around X-axis</li>
-        <li><b>o/u</b>: Rotate around Y-axis</li>
-        <li><b>l/j</b>: Rotate around Z-axis</li>
-    </ul>
+        <h3>3. Rotating Objects / Light</h3>
+        <ul>
+            <li><b>i/k</b>: Rotate around X-axis</li>
+            <li><b>o/u</b>: Rotate around Y-axis</li>
+            <li><b>l/j</b>: Rotate around Z-axis</li>
+        </ul>
 
-    <h3>4. Moving Objects / Light / Camera </h3>
-    <ul>
-        <li><b>→</b>: Move right | <b>←</b>: Move left</li>
-        <li><b>↑</b>: Move up | <b>↓</b>: Move down</li>
-        <li><b>,</b>: Move forward | <b>.</b>: Move backward</li>
-    </ul>
+        <h3>4. Moving Objects / Light / Camera </h3>
+        <ul>
+            <li><b>→</b>: Move right | <b>←</b>: Move left</li>
+            <li><b>↑</b>: Move up | <b>↓</b>: Move down</li>
+            <li><b>,</b>: Move forward | <b>.</b>: Move backward</li>
+        </ul>
 
-    <h3>5. Shading and Illumination Modes</h3>
-    <ul>
-        <li><b>w</b>: Gouraud Shading with Diffuse Lighting</li>
-        <li><b>e</b>: Gouraud Shading with Specular Highlights</li>
-        <li><b>r</b>: Phong Shading with Diffuse Lighting</li>
-        <li><b>t</b>: Phong Shading with Specular Highlights</li>
-    </ul>
+        <h3>5. Shading and Illumination Modes</h3>
+        <ul>
+            <li><b>w</b>: Gouraud Shading with Diffuse Lighting</li>
+            <li><b>e</b>: Gouraud Shading with Specular Highlights</li>
+            <li><b>r</b>: Phong Shading with Diffuse Lighting</li>
+            <li><b>t</b>: Phong Shading with Specular Highlights</li>
+        </ul>
 
-</div>
-
-<div id="fileUploadContainer">
-    <p>Choose number [1-9] and click the button below to choose an OBJ model.</p>
-    <label for="objFileInput" id="customFileButton">Choose OBJ File</label>
-    <input type="file" id="objFileInput" accept=".obj">
+        <div id="fileUploadContainer">
+            <p>Choose number [1-9] and click the button below to choose an OBJ model.</p>
+            <label for="objFileInput" id="customFileButton">Choose OBJ File</label>
+            <input type="file" id="objFileInput" accept=".obj">
+        </div>
+    </div>
 </div>
 
 <script src="src/main.js" type="module" defer></script>
