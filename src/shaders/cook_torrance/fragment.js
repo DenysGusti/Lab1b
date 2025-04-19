@@ -49,11 +49,11 @@ void main() {
     
         // Facet Distribution by Beckmann
         float m_2 = coefficient.roughness * coefficient.roughness;
+        // -tan^2 a = -sin^2 a / cos^2 a = (cos^2 a - 1) / cos^2 a = (N.H * N.H - 1) / (N.H * N.H)
         float D = 1. / (4. * m_2 * pow(NdotH, 4.)) * exp((NdotH * NdotH - 1.) / (m_2 * NdotH * NdotH));
     
         // Masking and Shadowing
-        float NdotH_2 = 2. * NdotH;
-        float G = min(1., min((NdotH_2 * NdotV) / VdotH, (NdotH_2 * NdotL) / VdotH));
+        float G = min(1., min((2. * NdotH * NdotV) / VdotH, (2. * NdotH * NdotL) / VdotH));
     
         specularIntensity = (F * D * G) / (PI * NdotL * NdotV);
     }
