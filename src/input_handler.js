@@ -27,7 +27,7 @@ export class InputHandler {
         this.camera = camera;
         this.light = light;
 
-        this.currentProgram = this.programs["phongSpecular"];
+        this.currentProgram = this.programs["gouraudDiffuse"];
 
         this.initKeyboardControls();
         this.initMouseControls();
