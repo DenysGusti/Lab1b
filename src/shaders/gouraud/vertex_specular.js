@@ -17,7 +17,9 @@ struct Coefficient {
     vec3 ambient;
     vec3 diffuse;
     vec3 specular;
-    float shininess;    
+    float shininess;
+    float F0;
+    float roughness;
 };
 
 uniform Coefficient coefficient;
@@ -36,21 +38,23 @@ void main() {
     vec4 viewPosition = camera.view * transformation * vec4(vertexPosition, 1.0);
     vec4 lightPosition = camera.view * vec4(light.position, 1.0);
 
-    vec3 lightVector = normalize(lightPosition.xyz - viewPosition.xyz);
-    vec3 normalVector = normalize(normal * vertexNormal);
+    vec3 L = normalize(lightPosition.xyz - viewPosition.xyz);   // light vector
+    vec3 N = normalize(normal * vertexNormal);  // normal vector
 
     vec3 ambientColor = vertexColor * coefficient.ambient;
 
-    float diffuseIntensity = max(dot(normalVector, lightVector), 0.);
+    float NdotL = max(dot(N, L), 0.);
+
+    float diffuseIntensity = NdotL;
     vec3 diffuseColor = vertexColor * diffuseIntensity * coefficient.diffuse;
 
     float specularIntensity = 0.;
 
-    if (diffuseIntensity > 0.) {
-        vec3 eyeVector = normalize(-viewPosition.xyz);
-        vec3 reflectionVector = reflect(-lightVector, normalVector);    // 2. * dot(n, l) * n - l;
+    if (NdotL > 0.) {
+        vec3 V = normalize(-viewPosition.xyz);  // eye/camera/view vector
+        vec3 R = reflect(-L, N);    // reflection vector 2. * dot(N, L) * N - L;
 
-        specularIntensity = pow(max(dot(reflectionVector, eyeVector), 0.), coefficient.shininess);
+        specularIntensity = pow(max(dot(R, V), 0.), coefficient.shininess);
     }
 
     vec3 specularColor = specularIntensity * coefficient.specular;

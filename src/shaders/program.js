@@ -12,6 +12,8 @@ export class Program {
     coefficientDiffuseUniform;
     coefficientSpecularUniform;
     coefficientShininessUniform;
+    coefficientF0Uniform;
+    coefficientRoughnessUniform;
 
     cameraPositionUniform;
     cameraProjectionUniform;
@@ -40,7 +42,7 @@ export class Program {
             return shader;
         }
 
-        console.log(this.gl.getShaderInfoLog(shader));
+        console.log(source, this.gl.getShaderInfoLog(shader));
     }
 
     createProgram(vertexShaderSourceCode, fragmentShaderSourceCode) {
@@ -65,6 +67,8 @@ export class Program {
             this.coefficientDiffuseUniform = this.gl.getUniformLocation(this.program, 'coefficient.diffuse');
             this.coefficientSpecularUniform = this.gl.getUniformLocation(this.program, 'coefficient.specular');
             this.coefficientShininessUniform = this.gl.getUniformLocation(this.program, 'coefficient.shininess');
+            this.coefficientF0Uniform = this.gl.getUniformLocation(this.program, 'coefficient.F0');
+            this.coefficientRoughnessUniform = this.gl.getUniformLocation(this.program, 'coefficient.roughness');
 
             this.cameraPositionUniform = this.gl.getUniformLocation(this.program, 'camera.position');
             this.cameraProjectionUniform = this.gl.getUniformLocation(this.program, 'camera.projection');
@@ -89,6 +93,8 @@ export class Program {
         this.gl.uniform3fv(this.coefficientDiffuseUniform, coefficient.diffuse);
         this.gl.uniform3fv(this.coefficientSpecularUniform, coefficient.specular);
         this.gl.uniform1f(this.coefficientShininessUniform, coefficient.shininess);
+        this.gl.uniform1f(this.coefficientF0Uniform, coefficient.F0);
+        this.gl.uniform1f(this.coefficientRoughnessUniform, coefficient.roughness);
 
         this.gl.uniform3fv(this.cameraPositionUniform, camera.getPosition());
         this.gl.uniformMatrix4fv(this.cameraProjectionUniform, false, camera.projectionMatrix);

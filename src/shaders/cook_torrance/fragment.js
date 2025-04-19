@@ -1,5 +1,7 @@
-export const phongSpecularFragmentShaderSourceCode = `#version 300 es
+export const cookTorranceFragmentShaderSourceCode = `#version 300 es
 precision mediump float;
+
+#define PI 3.14159265
 
 in vec3 fragmentViewPosition;
 in vec3 fragmentLightPosition;
@@ -19,7 +21,7 @@ struct Coefficient {
 
 uniform Coefficient coefficient;
 
-// Local Illumination, page 34
+// taken from https://www.cs.cornell.edu/courses/cs5625/2013sp/lectures/Lec2ShadingModelsWeb.pdf
 void main() {
     vec3 L = normalize(fragmentLightPosition - fragmentViewPosition);   // light vector
     vec3 N = normalize(fragmentNormal);  // normal vector
@@ -36,8 +38,24 @@ void main() {
     if (NdotL > 0.) {
         vec3 V = normalize(-fragmentViewPosition);  // eye/camera/view vector
         vec3 R = reflect(-L, N);    // reflection vector 2. * dot(N, L) * N - L;
+        vec3 H = normalize(L + V);  // half vector
 
-        specularIntensity = pow(max(dot(R, V), 0.), coefficient.shininess);
+        float NdotH = max(dot(N, H), 0.);
+        float NdotV = max(dot(N, V), 0.);
+        float VdotH = max(dot(L, H), 0.);
+    
+        // Schlick’s approximation of Fresnel
+        float F = coefficient.F0 + (1. - coefficient.F0) * pow(1. - VdotH, 5.);
+    
+        // Facet Distribution by Beckmann
+        float m_2 = coefficient.roughness * coefficient.roughness;
+        float D = 1. / (4. * m_2 * pow(NdotH, 4.)) * exp((NdotH * NdotH - 1.) / (m_2 * NdotH * NdotH));
+    
+        // Masking and Shadowing
+        float NdotH_2 = 2. * NdotH;
+        float G = min(1., min((NdotH_2 * NdotV) / VdotH, (NdotH_2 * NdotL) / VdotH));
+    
+        specularIntensity = (F * D * G) / (PI * NdotL * NdotV);
     }
 
     vec3 specularColor = specularIntensity * coefficient.specular;

@@ -16,6 +16,7 @@ import {gouraudFragmentShaderSourceCode} from "./shaders/gouraud/fragment.js";
 import {phongVertexShaderSourceCode} from "./shaders/phong/vertex.js";
 import {phongDiffuseFragmentShaderSourceCode} from "./shaders/phong/fragment_diffuse.js";
 import {phongSpecularFragmentShaderSourceCode} from "./shaders/phong/fragment_specular.js";
+import {cookTorranceFragmentShaderSourceCode} from "./shaders/cook_torrance/fragment.js";
 
 async function main() {
     const canvas = document.getElementById("glCanvas");
@@ -41,7 +42,8 @@ async function main() {
         "gouraudDiffuse": new Program(gl, gouraudDiffuseVertexShaderSourceCode, gouraudFragmentShaderSourceCode),
         "gouraudSpecular": new Program(gl, gouraudSpecularVertexShaderSourceCode, gouraudFragmentShaderSourceCode),
         "phongDiffuse": new Program(gl, phongVertexShaderSourceCode, phongDiffuseFragmentShaderSourceCode),
-        "phongSpecular": new Program(gl, phongVertexShaderSourceCode, phongSpecularFragmentShaderSourceCode)
+        "phongSpecular": new Program(gl, phongVertexShaderSourceCode, phongSpecularFragmentShaderSourceCode),
+        "cookTorrance": new Program(gl, phongVertexShaderSourceCode, cookTorranceFragmentShaderSourceCode)
     };
 
     // attributes are shares across programs, uniforms not
@@ -88,8 +90,7 @@ async function main() {
     const camera = new Viewer([0, 0, 10], null, [0, 0, -1], 45, canvas.width / canvas.height, shapeManager.createSelectableObject());
     const light = new Viewer([0, 10, 0], glm.vec3.create(), null, 45, 1., shapeManager.createSelectableObject());
     const global = new GlobalCoordinateSystem(shapeManager.createSelectableObject());
-    const coefficient = new Coefficient([0.2, 0.2, 0.2], [0.8, 0.8, 0.8], [1, 1, 1], 120);
-
+    const coefficient = new Coefficient([0.3, 0.3, 0.3], [0.7, 0.7, 0.7], [1, 1, 1], 120, 0.57, 0.3);
     const uniformStructs = [coefficient, camera, light];
 
     const inputHandler = new InputHandler(shapeManager, programs, shapes, global, camera, light);

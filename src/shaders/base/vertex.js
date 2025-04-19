@@ -3,7 +3,6 @@ precision mediump float;
 
 in vec3 vertexPosition;
 in vec3 vertexColor;
-in vec3 vertexNormal;
 
 out vec3 fragmentColor;
 
@@ -13,17 +12,7 @@ struct Viewer {
     mat4 view;
 };
 
-struct Coefficient {
-    vec3 ambient;
-    vec3 diffuse;
-    vec3 specular;
-    float shininess;    
-};
-
-uniform Coefficient coefficient;
-
 uniform Viewer camera;
-uniform Viewer light;
 
 // global * local or only global
 uniform mat4 transformation;

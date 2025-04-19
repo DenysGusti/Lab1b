@@ -13,18 +13,22 @@ struct Coefficient {
     vec3 diffuse;
     vec3 specular;
     float shininess;
+    float F0;
+    float roughness;
 };
 
 uniform Coefficient coefficient;
 
 // Local Illumination, page 29
 void main() {
-    vec3 lightVector = normalize(fragmentLightPosition - fragmentViewPosition);
-    vec3 normalVector = normalize(fragmentNormal);
+    vec3 L = normalize(fragmentLightPosition - fragmentViewPosition);   // light vector
+    vec3 N = normalize(fragmentNormal);  // normal vector
 
     vec3 ambientColor = fragmentColor * coefficient.ambient;
 
-    float diffuseIntensity = max(dot(normalVector, lightVector), 0.);
+    float NdotL = max(dot(N, L), 0.);
+
+    float diffuseIntensity = NdotL;
     vec3 diffuseColor = fragmentColor * diffuseIntensity * coefficient.diffuse;
 
     vec3 finalColor = ambientColor + diffuseColor;

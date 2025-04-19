@@ -28,6 +28,8 @@ In this lab, I have implemented the following tasks:
 
 
 
+## B2: (5%) Cooke-Torrance illumination model
+
 ---
 
 ## Tested Environments
@@ -50,6 +52,6 @@ The bunny model has several holes at the bottom, so since I enabled gl.enable(gl
 bunny, the back side will have the background color because the triangles pointing away from the viewer won't be
 visible. Selecting active lighting and shading models the second time gives the base shader. The light coordinate system
 is also displayed when selected. I also implemented a bounding box as shown in the tutorium and fixed the local and
-global transformations.
+global transformations. Illumination only changes in camera mode because control keys are shared across modes.
 
 ---

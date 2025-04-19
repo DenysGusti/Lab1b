@@ -235,6 +235,9 @@ export class InputHandler {
     }
 
     handleIllumination(event) {
+        if (this.currentMode !== InputHandler.modes.camera)
+            return;
+
         switch (event.key) {
             case "w":
                 if (this.currentProgram === this.programs["gouraudDiffuse"])
@@ -259,6 +262,12 @@ export class InputHandler {
                     this.currentProgram = this.programs["base"];
                 else
                     this.currentProgram = this.programs["phongSpecular"];
+                break;
+            case "k":
+                if (this.currentProgram === this.programs["cookTorrance"])
+                    this.currentProgram = this.programs["base"];
+                else
+                    this.currentProgram = this.programs["cookTorrance"];
                 break;
         }
     }
