@@ -48,10 +48,15 @@ async function main() {
     // I think that base optimizes out normals, everything is dark, so gouraudSpecular
     const shapeManager = new ShapeManager(gl, programs["gouraudSpecular"].activate());
 
-    await shapeManager.addOBJFromFile("bunny", "sampleModels/bunny.obj");
-    await shapeManager.addOBJFromFile("cube", "sampleModels/cube.obj");
-    await shapeManager.addOBJFromFile("teapot", "sampleModels/teapot.obj");
-    await shapeManager.addOBJFromFile("tetrahedron", "sampleModels/tetrahedron.obj");
+    await shapeManager.addOBJFromFile("bunny", "sampleModels/provided/bunny.obj");
+    await shapeManager.addOBJFromFile("cube", "sampleModels/provided/cube.obj");
+    await shapeManager.addOBJFromFile("teapot", "sampleModels/provided/teapot.obj");
+    await shapeManager.addOBJFromFile("tetrahedron", "sampleModels/provided/tetrahedron.obj");
+
+    await shapeManager.addOBJFromFile("cow", "sampleModels/blender/cow.obj");
+    await shapeManager.addOBJFromFile("sphere", "sampleModels/blender/sphere.obj");
+    await shapeManager.addOBJFromFile("suzanne", "sampleModels/blender/suzanne.obj");
+    await shapeManager.addOBJFromFile("teddy", "sampleModels/blender/teddy.obj");
 
     const SPACING = 2.5;
     const shapes = [
@@ -59,16 +64,22 @@ async function main() {
         shapeManager.createOBJShape("bunny", [-SPACING, SPACING, 0]),
 
         // shapeManager.createOctahedron([0, SPACING, 0]),
-        shapeManager.createOBJShape("cube", [0, SPACING, 0]),
+        // shapeManager.createOBJShape("cube", [0, SPACING, 0]),
+        shapeManager.createOBJShape("sphere", [0, SPACING, 0]),
 
         // shapeManager.createCube([SPACING, SPACING, 0]),
         shapeManager.createOBJShape("teapot", [SPACING, SPACING, 0]),
 
         // shapeManager.createOctahedron([-SPACING, 0, 0]),
-        shapeManager.createOBJShape("tetrahedron", [-SPACING, 0, 0]),
+        // shapeManager.createOBJShape("tetrahedron", [-SPACING, 0, 0]),
+        shapeManager.createOBJShape("suzanne", [-SPACING, 0, 0]),
 
-        shapeManager.createCube([0, 0, 0]),
-        shapeManager.createOctahedron([SPACING, 0, 0]),
+        // shapeManager.createCube([0, 0, 0]),
+        shapeManager.createOBJShape("cow", [0, 0, 0]),
+
+        // shapeManager.createOctahedron([SPACING, 0, 0]),
+        shapeManager.createOBJShape("teddy", [SPACING, 0, 0]),
+
         shapeManager.createCube([-SPACING, -SPACING, 0]),
         shapeManager.createOctahedron([0, -SPACING, 0]),
         shapeManager.createCube([SPACING, -SPACING, 0]),

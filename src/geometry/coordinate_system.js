@@ -1,4 +1,4 @@
-const AXIS_LIMIT = 2;
+const AXIS_LIMIT = 1.5;
 
 export const COORDINATE_SYSTEM_VERTICES = [
     -AXIS_LIMIT, 0, 0,

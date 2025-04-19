@@ -271,7 +271,6 @@ export class InputHandler {
 
     handleOBJReader(event) {
         const objText = event.target.result;
-        console.log(objText);
 
         const objName = Object.keys(this.shapeManager.objVao).length.toString();
         this.shapeManager.addOBJ(objName, objText);
@@ -290,6 +289,7 @@ export class InputHandler {
             if (this.selectedIndex >= 0) {
                 this.shapes[this.selectedIndex].selectableObject.selected = false;
             }
+            this.currentMode = InputHandler.modes.shape;
             this.selectedIndex = 4;
 
             this.shapes[this.selectedIndex].selectableObject.selected = true;
