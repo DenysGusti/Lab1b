@@ -33,11 +33,13 @@ mode, since the control key 't' is shared across modes.
 ## B2: (5%) Cooke-Torrance illumination model
 
 Resource: https://www.cs.cornell.edu/courses/cs5625/2013sp/lectures/Lec2ShadingModelsWeb.pdf
+
 The model is only selectable in camera mode because the control key 'k' is shared across modes.
 
 ## B3: (5%) Spot-light source
 
 Resource: https://learnopengl.com/book/book_preview.pdf, page 147
+
 The plane was subdivided into tiles to make the spotlight beam visible on the ground plane when using Gouraud shading.
 
 ---
