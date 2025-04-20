@@ -59,13 +59,14 @@ void main() {
         // Masking and Shadowing
         float G = min(1., min((2. * NdotH * NdotV) / VdotH, (2. * NdotH * NdotL) / VdotH));
 
-        specularIntensity = clamp((F * D * G) / (PI *NdotL * NdotV), 0., 1.);
+        specularIntensity = clamp((F * D * G) / (PI * NdotL * NdotV), 0., 1.);
     }
 
     vec3 specularColor = specularIntensity * coefficient.specular;
 
     float lightIntensity = 1.;
 
+    // taken from https://learnopengl.com/book/book_preview.pdf, page 147
     if (lightType == 1) {
         float theta = max(dot(-L, normalize(fragmentLightDirection)), 0.);
         float epsilon = coefficient.innerCutoff - coefficient.outerCutoff;

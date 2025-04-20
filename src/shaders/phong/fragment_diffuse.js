@@ -38,6 +38,7 @@ void main() {
 
     float lightIntensity = 1.;
 
+    // taken from https://learnopengl.com/book/book_preview.pdf, page 147
     if (lightType == 1) {
         float theta = max(dot(-L, normalize(fragmentLightDirection)), 0.);
         float epsilon = coefficient.innerCutoff - coefficient.outerCutoff;
