@@ -3,6 +3,7 @@ precision mediump float;
 
 in vec3 fragmentViewPosition;
 in vec3 fragmentLightPosition;
+in vec3 fragmentLightDirection;
 in vec3 fragmentNormal;
 in vec3 fragmentColor;
 
@@ -15,9 +16,13 @@ struct Coefficient {
     float shininess;
     float F0;
     float roughness;
+    float innerCutoff;
+    float outerCutoff;
 };
 
 uniform Coefficient coefficient;
+
+uniform int lightType;  // 0 - point light, 1 - spotlight
 
 // Local Illumination, page 34
 void main() {
@@ -42,7 +47,15 @@ void main() {
 
     vec3 specularColor = specularIntensity * coefficient.specular;
 
-    vec3 finalColor = ambientColor + diffuseColor + specularColor;
+    float lightIntensity = 1.;
+
+    if (lightType == 1) {
+        float theta = max(dot(-L, normalize(fragmentLightDirection)), 0.);
+        float epsilon = coefficient.innerCutoff - coefficient.outerCutoff;
+        lightIntensity = clamp((theta - coefficient.outerCutoff) / epsilon, 0., 1.);
+    }
+
+    vec3 finalColor = ambientColor + (diffuseColor + specularColor) * lightIntensity;
 
     outputColor = vec4(finalColor, 1.0);
 }`;

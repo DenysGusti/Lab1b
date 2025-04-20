@@ -18,6 +18,10 @@ export class InputHandler {
     currentMode = InputHandler.modes.camera;
     selectedIndex = -1;
     currentProgram = null;
+    currentLightType = 0;   // 0 - point light, 1 - spotlight
+
+    static getModeName = (value) =>
+        Object.keys(InputHandler.modes).find(key => InputHandler.modes[key] === value);
 
     constructor(shapeManager, programs, shapes, global, camera, light) {
         this.shapeManager = shapeManager;
@@ -32,6 +36,9 @@ export class InputHandler {
         this.initKeyboardControls();
         this.initMouseControls();
         this.initOBJButton();
+
+        document.getElementById("mode-display").textContent =
+            `Mode: ${InputHandler.getModeName(this.currentMode)}`;
     }
 
     initKeyboardControls() {
@@ -39,6 +46,7 @@ export class InputHandler {
             this.handleSelection(event);
             this.handleTransformation(event);
             this.handleIllumination(event);
+            this.handleLight(event);
         });
     }
 
@@ -143,6 +151,8 @@ export class InputHandler {
 
                 break;
         }
+        document.getElementById("mode-display").textContent =
+            `Mode: ${InputHandler.getModeName(this.currentMode)}`;
     }
 
     handleTransformation(event) {
@@ -268,6 +278,17 @@ export class InputHandler {
                     this.currentProgram = this.programs["base"];
                 else
                     this.currentProgram = this.programs["cookTorrance"];
+                break;
+        }
+    }
+
+    handleLight(event) {
+        if (this.currentMode === InputHandler.modes.camera)
+            return;
+
+        switch (event.key) {
+            case "t":
+                this.currentLightType = !this.currentLightType;
                 break;
         }
     }

@@ -26,6 +26,16 @@ export class Viewer extends GlobalTransformationObject {
         return glm.vec3.fromValues(position[0], position[1], position[2]);
     }
 
+    getDirection() {
+        if (this.fixedDirection != null) {
+            return this.fixedDirection;
+        } else if (this.fixedTarget != null) {
+            const direction = glm.vec3.create();
+            glm.vec3.sub(direction, this.fixedTarget, this.getPosition());
+            return direction;
+        }
+    }
+
     getViewMatrix() {
         const viewMatrix = glm.mat4.create();
 

@@ -7,6 +7,7 @@ in vec3 vertexNormal;
 
 out vec3 fragmentViewPosition;
 out vec3 fragmentLightPosition;
+out vec3 fragmentLightDirection;
 out vec3 fragmentNormal;
 out vec3 fragmentColor;
 
@@ -14,6 +15,7 @@ struct Viewer {
     vec3 position;
     mat4 projection;
     mat4 view;
+    vec3 direction;
 };
 
 uniform Viewer camera;
@@ -31,6 +33,7 @@ void main() {
 
     fragmentViewPosition = viewPosition.xyz;
     fragmentLightPosition = lightPosition.xyz;
+    fragmentLightDirection = light.direction;
     fragmentNormal = normal * vertexNormal;
     fragmentColor = vertexColor;
 

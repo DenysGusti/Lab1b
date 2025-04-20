@@ -22,13 +22,21 @@ In this lab, I have implemented the following tasks:
 
 ### a) selection
 
-
+Selecting the active lighting and shading models a second time reverts to the base shader. Lighting and shading models
+are only selectable in camera mode, as the control keys 't' and 'k' are shared across modes.
 
 ### b) Light transformations
 
-
+The light coordinate system is also displayed when selected. Light source types are only selectable outside of camera
+mode, since the control key 't' is shared across modes.
 
 ## B2: (5%) Cooke-Torrance illumination model
+
+The model is only selectable in camera mode because the control key 'k' is shared across modes.
+
+## B3: (5%) Spot-light source
+
+The plane was subdivided into tiles to make the spotlight beam visible on the ground plane when using Gouraud shading.
 
 ---
 
@@ -50,8 +58,8 @@ In this lab, I have implemented the following tasks:
 
 The bunny model has several holes at the bottom, so since I enabled gl.enable(gl.CULL_FACE), if you look inside the
 bunny, the back side will have the background color because the triangles pointing away from the viewer won't be
-visible. Selecting active lighting and shading models the second time gives the base shader. The light coordinate system
-is also displayed when selected. I also implemented a bounding box as shown in the tutorium and fixed the local and
-global transformations. Illumination only changes in camera mode because control keys are shared across modes.
+visible. I also implemented a bounding box as demonstrated in the tutorium and fixed both local and global
+transformations. The type of light source is selected using a uniform variable to avoid duplicating shader code. The
+camera can also move forwards and backwards.
 
 ---

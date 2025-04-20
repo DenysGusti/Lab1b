@@ -10,6 +10,14 @@ import {
     COORDINATE_SYSTEM_VERTICES,
     createInterleavedCoordinateSystem
 } from "./geometry/coordinate_system.js";
+import {
+    createInterleavedTile,
+    TILE_VERTICES,
+    TILE_COLORS,
+    TILE_INDICES,
+    TILE_NORMALS
+} from "./geometry/tile.js";
+
 import {Shape} from "./objects/shape.js";
 import {OBJParser} from "./obj_parser.js";
 import {Vao} from "./objects/vao.js";
@@ -23,6 +31,7 @@ export class ShapeManager {
     cubeVao;
     octahedronVao;
     coordinateSystemVao;
+    tileVao;
 
     // loaded obj models
     objVao = {};
@@ -38,6 +47,7 @@ export class ShapeManager {
         this.initCube();
         this.initOctahedron();
         this.initCoordinateSystem();
+        this.initTile();
     }
 
     initCube() {
@@ -62,6 +72,12 @@ export class ShapeManager {
             new Vao(this.gl, this.program, this.gl.LINES, interleavedCoordinateSystemVertices, COORDINATE_SYSTEM_INDICES);
     }
 
+    initTile() {
+        const interleavedTileVertices =
+            createInterleavedTile(TILE_VERTICES, TILE_COLORS, TILE_NORMALS);
+        this.tileVao = new Vao(this.gl, this.program, this.gl.TRIANGLES, interleavedTileVertices, TILE_INDICES);
+    }
+
     createCube(translateVec) {
         const shape = new Shape(this.cubeVao, this.createSelectableObject());
         shape.translate(translateVec);
@@ -76,6 +92,12 @@ export class ShapeManager {
 
     createSelectableObject() {
         return new SelectableObject(this.coordinateSystemVao);
+    }
+
+    createTile(translateVec) {
+        const shape = new Shape(this.tileVao, this.createSelectableObject());
+        shape.translate(translateVec);
+        return shape;
     }
 
     addOBJ(name, objText) {

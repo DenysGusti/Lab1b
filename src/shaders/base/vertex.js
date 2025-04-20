@@ -10,6 +10,7 @@ struct Viewer {
     vec3 position;
     mat4 projection;
     mat4 view;
+    vec3 direction;
 };
 
 uniform Viewer camera;

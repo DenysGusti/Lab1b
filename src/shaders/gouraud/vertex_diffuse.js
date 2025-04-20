@@ -11,6 +11,7 @@ struct Viewer {
     vec3 position;
     mat4 projection;
     mat4 view;
+    vec3 direction;
 };
 
 struct Coefficient {
@@ -20,6 +21,8 @@ struct Coefficient {
     float shininess;
     float F0;
     float roughness;
+    float innerCutoff;
+    float outerCutoff;
 };
 
 uniform Coefficient coefficient;
@@ -31,6 +34,8 @@ uniform Viewer light;
 uniform mat4 transformation;
 // inverseTranspose(mat3(camera.view * transformation))
 uniform mat3 normal;    // it's better to compute it in js
+
+uniform int lightType;  // 0 - point light, 1 - spotlight
 
 // Local Illumination, page 29
 void main() {
@@ -48,7 +53,15 @@ void main() {
     float diffuseIntensity = NdotL;
     vec3 diffuseColor = vertexColor * diffuseIntensity * coefficient.diffuse;
 
-    fragmentColor = ambientColor + diffuseColor;
+    float lightIntensity = 1.;
+
+    if (lightType == 1) {
+        float theta = max(dot(-L, normalize(light.direction)), 0.);
+        float epsilon = coefficient.innerCutoff - coefficient.outerCutoff;
+        lightIntensity = clamp((theta - coefficient.outerCutoff) / epsilon, 0., 1.);
+    }
+
+    fragmentColor = ambientColor + diffuseColor * lightIntensity;
 
     gl_Position = camera.projection * viewPosition;
 }`;
