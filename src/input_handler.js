@@ -307,8 +307,6 @@ export class InputHandler {
         this.shapeManager.addOBJ(objName, objText);
 
         this.shapes[this.selectedIndex].vao = this.shapeManager.objVao[objName];
-        // old object can be too big
-        this.shapes[this.selectedIndex].scalingMatrix = glm.mat4.create();
     }
 
     handleOBJFile(event) {
@@ -335,5 +333,6 @@ export class InputHandler {
         };
 
         reader.readAsText(file);
+        event.target.value = '';
     }
 }
