@@ -1,14 +1,9 @@
-export let phongVertexShaderSourceCode;
-phongVertexShaderSourceCode = `#version 300 es
+export const shadowFragmentShaderSourceCode = `#version 300 es
 precision mediump float;
 
-in vec3 vertexPosition;
-in vec3 vertexColor;
-in vec3 vertexNormal;
+in vec3 fragmentPosition;
 
-out vec3 fragmentPosition;
-out vec3 fragmentColor;
-out vec3 fragmentNormal;
+out vec4 outputColor;
 
 uniform struct Coefficient {
     vec3 ambient;
@@ -47,11 +42,9 @@ uniform mat3 normalMatrix;  // inverseTranspose(mat3(transformationMatrix))
 uniform samplerCube lightShadowMap;
 
 void main() {
-    vec4 position = transformationMatrix * vec4(vertexPosition, 1.);
+    float len = length(fragmentPosition - light.position);
+    float lightShadowDistance =
+        (len - coefficient.shadowClipNearFar.x) / (coefficient.shadowClipNearFar.y - coefficient.shadowClipNearFar.x);
 
-    fragmentPosition = position.xyz;
-    fragmentNormal = normalMatrix * vertexNormal;
-    fragmentColor = vertexColor;
-
-    gl_Position = viewer.projection * viewer.view * position;
+    outputColor = vec4(lightShadowDistance, lightShadowDistance, lightShadowDistance, 1.);
 }`;

@@ -22,13 +22,16 @@ In this lab, I have implemented the following tasks:
 
 ### a) selection
 
-Selecting the active lighting and shading models a second time reverts to the base shader. Lighting and shading models
-are only selectable in camera mode, as the control keys 't' and 'k' are shared across modes.
+Lighting and shading models are only selectable in camera mode, as the control keys 't' and 'k' are shared across modes.
 
 ### b) Light transformations
 
 The light coordinate system is also displayed when selected. Light source types are only selectable outside of camera
 mode, since the control key 't' is shared across modes.
+
+## B1: (10%) Implement shadows
+
+Resource: https://youtu.be/watch?v=UnFudL21Uq4
 
 ## B2: (5%) Cooke-Torrance illumination model
 
@@ -64,6 +67,7 @@ The bunny model has several holes at the bottom, so since I enabled gl.enable(gl
 bunny, the back side will have the background color because the triangles pointing away from the viewer won't be
 visible. I also implemented a bounding box as demonstrated in the tutorium and fixed both local and global
 transformations. The type of light source is selected using a uniform variable to avoid duplicating shader code. The
-camera can also move forwards and backwards.
+camera can also move forwards and backwards. Only eye vector is in view space when doing lightning calculations, and it
+somehow works.
 
 ---

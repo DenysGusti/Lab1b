@@ -6,22 +6,44 @@ in vec3 vertexColor;
 
 out vec3 fragmentColor;
 
-struct Viewer {
+uniform struct Coefficient {
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
+    float shininess;
+    float F0;
+    float roughness;
+    float innerCutoff;
+    float outerCutoff;
+    vec2 shadowClipNearFar;
+    float bias;
+} coefficient;
+
+uniform struct Flag {
+    int enableSpecular;
+    int enableCookTorrance;
+    int enableSpotlight;
+    int enableShadow;
+} flag;
+
+uniform struct Light {
     vec3 position;
+    vec3 direction;
+} light;
+
+uniform struct Viewer {
     mat4 projection;
     mat4 view;
-    vec3 direction;
-};
+} viewer;
 
-uniform Viewer camera;
+uniform mat4 transformationMatrix;  // global * local or only global
+// (it's better to compute it in js)
+uniform mat3 normalMatrix;  // inverseTranspose(mat3(transformationMatrix))
 
-// global * local or only global
-uniform mat4 transformation;
-// inverseTranspose(mat3(camera.view * transformation))
-uniform mat3 normal;    // it's better to compute it in js
+uniform samplerCube lightShadowMap;
 
 void main() {
     fragmentColor = vertexColor;
 
-    gl_Position = camera.projection * camera.view * transformation * vec4(vertexPosition, 1.0);
+    gl_Position = viewer.projection * viewer.view * transformationMatrix * vec4(vertexPosition, 1.);
 }`;

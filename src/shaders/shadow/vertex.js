@@ -1,5 +1,4 @@
-export let phongVertexShaderSourceCode;
-phongVertexShaderSourceCode = `#version 300 es
+export const shadowVertexShaderSourceCode = `#version 300 es
 precision mediump float;
 
 in vec3 vertexPosition;
@@ -7,8 +6,6 @@ in vec3 vertexColor;
 in vec3 vertexNormal;
 
 out vec3 fragmentPosition;
-out vec3 fragmentColor;
-out vec3 fragmentNormal;
 
 uniform struct Coefficient {
     vec3 ambient;
@@ -50,8 +47,6 @@ void main() {
     vec4 position = transformationMatrix * vec4(vertexPosition, 1.);
 
     fragmentPosition = position.xyz;
-    fragmentNormal = normalMatrix * vertexNormal;
-    fragmentColor = vertexColor;
 
     gl_Position = viewer.projection * viewer.view * position;
 }`;

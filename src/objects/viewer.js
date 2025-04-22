@@ -4,20 +4,21 @@ import {GlobalTransformationObject} from "../transformation_object/global_transf
 export class Viewer extends GlobalTransformationObject {
     fixedTarget = null;
     fixedDirection = null;
+    up;
 
-    projectionMatrix = glm.mat4.create();
+    projectionMatrix;
     selectableObject;
 
-    constructor(position, fixedTarget, fixedDirection, fovy_degrees, aspect, selectableObject) {
+    constructor(position, fixedTarget, fixedDirection, up, projectionMatrix, selectableObject) {
         super();
         super.translate(position);
 
         this.fixedTarget = fixedTarget;
         this.fixedDirection = fixedDirection;
+        this.up = up;
 
+        this.projectionMatrix = projectionMatrix;
         this.selectableObject = selectableObject;
-
-        glm.mat4.perspective(this.projectionMatrix, glm.glMatrix.toRadian(fovy_degrees), aspect, 0.1, 100.0);
     }
 
     getPosition() {
@@ -40,12 +41,12 @@ export class Viewer extends GlobalTransformationObject {
         const viewMatrix = glm.mat4.create();
 
         if (this.fixedTarget != null) {
-            glm.mat4.lookAt(viewMatrix, this.getPosition(), this.fixedTarget, [0, 1, 0]);
+            glm.mat4.lookAt(viewMatrix, this.getPosition(), this.fixedTarget, this.up);
         } else if (this.fixedDirection != null) {
             const position = this.getPosition();
             const target = glm.vec3.create();
             glm.vec3.add(target, position, this.fixedDirection);
-            glm.mat4.lookAt(viewMatrix, position, target, [0, 1, 0]);
+            glm.mat4.lookAt(viewMatrix, position, target, this.up);
         }
 
         return viewMatrix;

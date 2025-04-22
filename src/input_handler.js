@@ -1,4 +1,5 @@
 import * as glm from './gl-matrix/index.js';
+import {Flag} from "./program/flag.js";
 
 export class InputHandler {
     static modes = {
@@ -18,7 +19,7 @@ export class InputHandler {
     currentMode = InputHandler.modes.camera;
     selectedIndex = -1;
     currentProgram = null;
-    currentLightType = 0;   // 0 - point light, 1 - spotlight
+    flag = new Flag(false, false, false, false);
 
     static getModeName = (value) =>
         Object.keys(InputHandler.modes).find(key => InputHandler.modes[key] === value);
@@ -31,7 +32,7 @@ export class InputHandler {
         this.camera = camera;
         this.light = light;
 
-        this.currentProgram = this.programs["gouraudDiffuse"];
+        this.currentProgram = this.programs["gouraud"];
 
         this.initKeyboardControls();
         this.initMouseControls();
@@ -47,6 +48,7 @@ export class InputHandler {
             this.handleTransformation(event);
             this.handleIllumination(event);
             this.handleLight(event);
+            this.handleShadow(event);
         });
     }
 
@@ -250,34 +252,29 @@ export class InputHandler {
 
         switch (event.key) {
             case "w":
-                if (this.currentProgram === this.programs["gouraudDiffuse"])
-                    this.currentProgram = this.programs["base"];
-                else
-                    this.currentProgram = this.programs["gouraudDiffuse"];
+                this.currentProgram = this.programs["gouraud"];
+                this.flag.enableSpecular = false;
+                this.flag.enableCookTorrance = false;
                 break;
             case "e":
-                if (this.currentProgram === this.programs["gouraudSpecular"])
-                    this.currentProgram = this.programs["base"];
-                else
-                    this.currentProgram = this.programs["gouraudSpecular"];
+                this.currentProgram = this.programs["gouraud"];
+                this.flag.enableSpecular = true;
+                this.flag.enableCookTorrance = false;
                 break;
             case "r":
-                if (this.currentProgram === this.programs["phongDiffuse"])
-                    this.currentProgram = this.programs["base"];
-                else
-                    this.currentProgram = this.programs["phongDiffuse"];
+                this.currentProgram = this.programs["phong"];
+                this.flag.enableSpecular = false;
+                this.flag.enableCookTorrance = false;
                 break;
             case "t":
-                if (this.currentProgram === this.programs["phongSpecular"])
-                    this.currentProgram = this.programs["base"];
-                else
-                    this.currentProgram = this.programs["phongSpecular"];
+                this.currentProgram = this.programs["phong"];
+                this.flag.enableSpecular = true;
+                this.flag.enableCookTorrance = false;
                 break;
             case "k":
-                if (this.currentProgram === this.programs["cookTorrance"])
-                    this.currentProgram = this.programs["base"];
-                else
-                    this.currentProgram = this.programs["cookTorrance"];
+                this.currentProgram = this.programs["phong"];
+                this.flag.enableSpecular = true;
+                this.flag.enableCookTorrance = true;
                 break;
         }
     }
@@ -286,10 +283,14 @@ export class InputHandler {
         if (this.currentMode === InputHandler.modes.camera)
             return;
 
-        switch (event.key) {
-            case "t":
-                this.currentLightType = !this.currentLightType;
-                break;
+        if (event.key === "t") {
+            this.flag.enableSpotlight = !this.flag.enableSpotlight;
+        }
+    }
+
+    handleShadow(event) {
+        if (event.key === "h") {
+            this.flag.enableShadow = !this.flag.enableShadow;
         }
     }
 
